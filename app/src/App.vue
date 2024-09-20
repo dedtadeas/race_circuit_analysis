@@ -66,10 +66,6 @@ document.querySelector('body').classList.add('app-init');
 		<app-top-nav v-if="appOption.appTopNav" />
 		<app-sidebar v-if="!appOption.appSidebarHide" />
 
-
-		<UAVsManager />
-		<ADSBManager />
-		<DroneTagManager />
 		<NotificationManager />
 
 		<div class="app-content" :class="[appOption.appContentClass, noPadding ? 'app-content-no-padding' : '']">

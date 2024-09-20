@@ -14,9 +14,9 @@ export const useAppSidebarMenuStore = defineStore({
       }
       ,
       {
-        'url': '/uav_control',
+        'url': '/Circuits',
         'icon': 'bi bi-map',
-        'text': 'ArenaView'
+        'text': 'Circuits'
       }
     ]
   }
