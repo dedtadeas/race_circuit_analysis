@@ -1,0 +1,151 @@
+FREQUENTIS:
+  auth_server: 'https://keycloak-airlabs.utm-labs-frequentis.com'
+  ops_server: 'https://operation-service.utm-labs-frequentis.com'
+  secret: 'GexEbsby5Hj3rM8Zu7KTCCE78dxxiPFr'
+  simulation_server: 'http://utm-sim.azurewebsites.net'
+  telemetry_server: 'https://telemetry-endpoint.utm-labs-frequentis.com'
+  user: 'v2air'
+
+GCS_SERVICES:
+  - '/u_GIMBAL_CAMERA_CONTROL_GND'
+
+COMPANION_SERVICES:
+  - '/TELEMETRY'
+  - '/u_DRONE_KIT'
+
+DEPLOY_ENV: prod
+
+DRONE_CONNECTION:
+  prod:
+    - mavproxy_ip: '10.128.0.151'
+      mavproxy_port: 14561
+      local_ip: '10.128.0.151'
+      cam_control_ip: '10.128.0.228:40151'
+      pn: 'JAM-30082023-0000'
+      sn: '2308-0001'
+      grpc_port: 24561
+      max_workers: 10
+      name: 'ANNA1'
+      autopilot: 'ArduPilot'
+    - mavproxy_ip: '10.128.0.152'
+      mavproxy_port: 14562
+      local_ip: '10.128.0.152'
+      cam_control_ip: '10.128.0.228:40152'
+      pn: 'JAM-30082023-0000'
+      sn: '2308-0002'
+      grpc_port: 24562
+      max_workers: 10
+      name: 'ANNA2'
+      autopilot: 'ArduPilot'
+    - mavproxy_ip: '10.128.0.153'
+      mavproxy_port: 14563
+      local_ip: '10.128.0.153'
+      cam_control_ip: '10.128.0.228:40153'
+      pn: 'JAM-30082023-0000'
+      sn: '2405-0003'
+      grpc_port: 24563
+      max_workers: 10
+      name: 'ANNA3'
+      autopilot: 'ArduPilot'
+    - mavproxy_ip: '10.128.0.154'
+      mavproxy_port: 14564
+      local_ip: '10.128.0.154'
+      cam_control_ip: '10.128.0.228:40154'
+      pn: 'JAM-30082023-0000'
+      sn: '2405-0004'
+      grpc_port: 24564
+      max_workers: 10
+      name: 'ANNA4'
+      autopilot: 'ArduPilot'
+
+  dev:
+    - mavproxy_ip: '10.128.7.136'
+      mavproxy_port: 18561
+      local_ip: '10.128.7.97'
+      cam_control_ip: '10.128.7.136'
+      pn: 'V2AIR-03102023-0001'
+      sn: '2310-0003'
+      grpc_port: 28561
+      max_workers: 10
+      name: 'Simulated ANNA1'
+      autopilot: 'ArduPilot'
+    - mavproxy_ip: '10.128.7.136'
+      mavproxy_port: 18562
+      local_ip: '10.128.7.97'
+      cam_control_ip: '10.128.7.136'
+      pn: 'V2AIR-03102023-0001'
+      sn: '2310-0004'
+      grpc_port: 28562
+      max_workers: 10
+      name: 'Simulated ANNA2'
+      autopilot: 'ArduPilot'
+    - mavproxy_ip: '10.128.7.136'
+      mavproxy_port: 18565
+      local_ip: '10.128.7.97'
+      cam_control_ip: '10.128.7.136'
+      pn: 'V2AIR-03102023-0001'
+      sn: '2310-0005'
+      grpc_port: 28565
+      max_workers: 10
+      name: 'Simulated ANNA3'
+      autopilot: 'ArduPilot'
+    - mavproxy_ip: '10.128.7.136'
+      mavproxy_port: 18566
+      local_ip: '10.128.7.97'
+      cam_control_ip: '10.128.7.136'
+      pn: 'V2AIR-03102023-0001'
+      sn: '2310-0006'
+      grpc_port: 28566
+      max_workers: 10
+      name: 'Simulated ANNA4'
+      autopilot: 'ArduPilot'
+
+INFLUX_DB:
+  prod:
+    ip_address: '10.128.0.239'
+    org: 'V2AIR'
+    port: '8086'
+    token: 'nALb06TEDVJ9OHhHpbe1-sB4HTAsb2-Wh48A0firiVVSu-GEH_9cTZ4Ldfqn24HR13KHK2anoFLxGrMkT4EUoA=='
+    telemetry_bucket: 'telemetry'
+    service_info: 'service_info'
+  dev:
+    ip_address: '10.128.5.250'
+    org: 'V2AIR'
+    port: '8086'
+    token: 'nALb06TEDVJ9OHhHpbe1-sB4HTAsb2-Wh48A0firiVVSu-GEH_9cTZ4Ldfqn24HR13KHK2anoFLxGrMkT4EUoA=='
+    telemetry_bucket: 'telemetry'
+    service_info: 'service_info'
+
+SKAARHOJ_PANEL:
+  prod:
+    panel_ip: '10.128.0.214'
+    panel_port: 9923
+  dev:
+    panel_ip: '10.128.4.200'
+    panel_port: 9923
+
+DRONE_TAG_WBS_SERVER:
+  prod:
+    drone_tag_wbsct: 'http://10.128.6.224:20013'
+  dev:
+    drone_tag_wbsct: 'http://10.128.4.200:20013'
+
+DATA_EXCHANGE_PROXY:
+  prod:
+    ip: '10.128.0.239'
+    wbs_port: 20001
+    quic_port: 20002
+    paths: ['/u_GIMBAL_CAMERA_CONTROL_GND', '/TELEMETRY', '/u_DRONE_KIT']
+    status_timeout: 5
+    telemetry_broadcast_freq_hz: 10
+    services_broadcast_freq_hz: 1
+    timeout_client_disconnect: 2
+  dev:
+    ip: '10.128.4.200'
+    wbs_port: 20001
+    quic_port: 20002
+    paths: ['/u_GIMBAL_CAMERA_CONTROL_GND', '/TELEMETRY', '/u_DRONE_KIT']
+    status_timeout: 5
+    telemetry_broadcast_freq_hz: 10
+    services_broadcast_freq_hz: 1
+    timeout_client_disconnect: 2
