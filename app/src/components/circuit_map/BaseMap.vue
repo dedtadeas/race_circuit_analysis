@@ -1,19 +1,39 @@
 <template>
-  <div ref="baseMap" class="base-map"></div>
+  <div ref="baseMap" class="base-map">
+    <!-- Position the slider properly using CSS -->
+    <div class="slider-container">
+      <input type="range" min="100" max="2000" v-model="bufferDistance" @input="updateBuffer" />
+      <p>Buffer Radius: {{ bufferDistance }} meters</p>
+    </div>
+  </div>
 </template>
 
 <script>
 import { ref, onMounted } from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import 'leaflet-fullscreen';  // Import the Fullscreen plugin
-import 'leaflet-fullscreen/dist/leaflet.fullscreen.css';  // Import Fullscreen CSS
+import 'leaflet-fullscreen';
+import 'leaflet-fullscreen/dist/leaflet.fullscreen.css';
+import * as turf from '@turf/turf';
 import config from '@/config';
 
 export default {
   name: 'BaseMap',
-  setup() {
+  props: {
+    zoom: {
+      type: Number,
+      default: 16,
+    },
+    center: {
+      type: Array,
+      default: () => [47.2197, 14.7647], // RedBull Ring approximate center
+    },
+  },
+  setup(props) {
     const baseMap = ref(null);
+    const bufferDistance = ref(500); // Default radius (in meters)
+    let map = null;
+    let circleLayer = null;
 
     // Base layers
     const baseLayers = {
@@ -28,42 +48,41 @@ export default {
       }),
     };
 
-    // Overlay layers (OpenAIP)
-    const overlayLayers = {
-      OpenAIP: L.tileLayer(
-        `https://a.api.tiles.openaip.net/api/data/openaip/{z}/{x}/{y}.png?apiKey=${config.openaipApiKey}`,
-        {
-          minZoom: 1,
-          maxZoom: 19,
-          attribution: 'Map data &copy; <a href="https://www.openaip.net/">OpenAIP</a>',
-          crossOrigin: true,
-        }
-      ),
-    };
-
     onMounted(() => {
-      const map = L.map(baseMap.value, {
-        center: [0, 0],
-        zoom: 3,
-        layers: [baseLayers.Satellite], // Default base layer
+      // Initialize the map
+      map = L.map(baseMap.value, {
+        center: props.center,
+        zoom: props.zoom,
+        layers: [baseLayers.Satellite],
       });
 
       // Add fullscreen control
       map.addControl(new L.Control.Fullscreen());
 
-      // Add layer control to switch between base layers and toggle OpenAIP overlay
-      L.control.layers(baseLayers, overlayLayers).addTo(map);
+      // Add layer control
+      L.control.layers(baseLayers).addTo(map);
 
-      // Add fullscreen event listeners (optional)
-      map.on('enterFullscreen', () => {
-        console.log('Entered fullscreen mode');
-      });
-      map.on('exitFullscreen', () => {
-        console.log('Exited fullscreen mode');
-      });
+      // Draw initial circle around RedBull Ring center
+      updateBuffer();
     });
 
-    return { baseMap };
+    const updateBuffer = () => {
+      if (circleLayer) {
+        map.removeLayer(circleLayer);
+      }
+
+      // Draw a new circle using the buffer distance from the slider
+      circleLayer = L.circle(props.center, {
+        radius: bufferDistance.value,
+        color: 'blue',
+      }).addTo(map);
+    };
+
+    return {
+      baseMap,
+      bufferDistance,
+      updateBuffer,
+    };
   },
 };
 </script>
@@ -72,10 +91,26 @@ export default {
 .base-map {
   width: 100%;
   height: 500px;
+  position: relative;
 }
 
 .leaflet-fullscreen-on .base-map {
   width: 100%;
   height: 100%;
+}
+
+/* Position the slider on top of the map */
+.slider-container {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 10px;
+  border-radius: 4px;
+  z-index: 1000;
+}
+
+input[type='range'] {
+  width: 150px;
 }
 </style>
