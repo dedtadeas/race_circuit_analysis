@@ -1,0 +1,51 @@
+Hi!
+
+Lets discuss the steps for race circuits analysis and potential usecase and its evolution. 
+
+
+
+I have started working on DE, IT, ES and FR circuits. So far my workflow is as follows with approximate hour estimate per circuit:
+
+
+
+1. Download OpenStreet map layer and extract tribunes, track and other useful polygons, lines or points. (1,5 h)
+
+By other "useful polygons and lines", I mean e.g. names of curves, start/finish or other names which will be part of the map data. I am not planning to copy all information. It should be minimal set, which will facilitate orientation on the circuit.  
+
+2. Getting reference pictures or text from the web. Adjusting the polygons and info in the map. (1,5 h)
+
+Adding newly build tribunes, places with standing spectators, civil buildings in close proximity to circuit.
+
+3. Checking 2 or 3 race videos on YouTube and adjusting . (0,5 - 1 h)
+
+4. Contact race circuit (via email) to further check potential places with spectators + review of our map. (0,5 h)
+
+I will come up with solution to not mention V2AIR and leave it completely uninvolved. 
+
+5. Export layers to geojson/kml, web development (0,5 h)
+
+6. Incorporating feedbacks from your side (0,5 h)
+
+
+
+Output: geojson/kml files + references, static website,
+
+ 
+
+I am now finishing several circuits and first version of the static webpage. I will send info tomorrow (Tuesday)
+
+
+
+Meeting topics:
+
+1. Webpage usecase and features
+
+2. Review of finished circuits
+
+3. Approve workflow and hour estimate
+
+4. Deadlines (10 circuits until end of September, top priority circuits until 11.10., ... ) 
+
+
+
+Thank you!

@@ -1,5 +1,4 @@
 import { fileURLToPath, URL } from "url";
-
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
@@ -13,6 +12,9 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    exclude: ['vue-demi']
-	}
+    exclude: ['vue-demi'],
+  },
+  base: process.env.NODE_ENV === 'production'
+    ? 'race_circuit_analysis' // Replace with your GitHub repo name
+    : '/',
 });
