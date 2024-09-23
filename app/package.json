@@ -1,9 +1,11 @@
 {
   "name": "hud-vue",
   "version": "3.0.0",
+  "homepage": "https://github.com/dedtadeas/race_circuit_analysis",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
+    "deploy": "gh-pages -d dist",
     "preview": "vite preview --port 5050",
     "test:unit": "vitest --environment jsdom",
     "test:e2e": "start-server-and-test preview http://127.0.0.1:5050/ 'cypress open'",
@@ -91,6 +93,7 @@
     "eslint": "^8.56.0",
     "eslint-plugin-cypress": "^3.3.0",
     "eslint-plugin-vue": "^9.27.0",
+    "gh-pages": "^6.1.1",
     "jsdom": "^24.1.0",
     "prettier": "^3.3.3",
     "sass": "1.75",
