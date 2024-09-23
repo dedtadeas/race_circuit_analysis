@@ -2,15 +2,15 @@
 <template>
   <div ref="baseMap" class="base-map">
     <!-- Loading or error overlay -->
-    <div v-if="loading" class="loading-overlay">
-      <p :class="{ 'error-message': errorOccurred }">
-        {{ errorOccurred ? 'Error fetching data!' : 'Loading data...' }}
+    <div v-if="fetchingStatus !== 0" class="loading-overlay">
+      <p :class="{ 'error-message': fetchingStatus === 2 }">
+        {{ fetchingStatus === 2 ? 'Error fetching data!' : 'Loading data...' }}
       </p>
     </div>
     <!-- Buffer size slider -->
-    <div class="slider-container" @input="updateBuffer" @mousedown.stop @mouseup.stop>
-      <input type="range" min="100" max="2000" v-model="bufferDistance" />
-      <p>Buffer Radius: {{ bufferDistance }} m</p>
+    <div class="slider-container" @input.stop @mousedown.stop @mouseup="updateAreas">
+      <input type="range" min="0" max="1000" v-model="areasGrowMeters" />
+      <p>Areas grow: {{ areasGrowMeters }} m</p>
     </div>
   </div>
 </template>
@@ -28,15 +28,14 @@ export default {
   name: 'BaseMap',
   setup(props) {
     const baseMap = ref(null);
-    const bufferDistance = ref(500); // Default radius (in meters)
+    const areasGrowMeters = ref(0);
+    const fetchingStatus = ref(1); // Tracks fetch status loading: 1, success: 0, or error: 2
     let map = null;
     let trackLayer = null;
-    let spectatorLayer = null;
-    const loading = ref(true); // Ref to manage loading state
-    const errorOccurred = ref(false); // Ref to manage error state
+    let spectatorLayer        = null;
+    let spectatorLayerGeoJSON = null;
 
     onMounted(() => {
-      // Map layers
       const layers = {
         Satellite: L.tileLayer(
           `https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.jpg?key=${config.mapTilerApiKey}`,
@@ -46,11 +45,8 @@ export default {
           { minZoom: 1, maxZoom: 19, attribution: 'Map data &copy; OpenStreetMap contributors' }),
       };
 
-      // Initialize the map
       map = L.map(baseMap.value, { center: props.center, zoom: props.zoom, layers: [layers.Satellite] });
-      // Add fullscreen control
       map.addControl(new L.Control.Fullscreen());
-      // Add layer control
       L.control.layers(layers).addTo(map);
 
       // Fetch and draw Polygons
@@ -61,24 +57,31 @@ export default {
           trackLayer     = L.geoJSON(t, { style: { color: 'red' , fillOpacity: 0.4 } }).addTo(map);
           spectatorLayer = L.geoJSON(s, { style: { color: 'blue', fillOpacity: 0.4 } }).addTo(map);
           map.fitBounds(spectatorLayer.getBounds());
-          loading.value = false;
+          fetchingStatus.value   = 0;
+          spectatorLayerGeoJSON = spectatorLayer.toGeoJSON();
         })
         .catch((e) => {
           console.error('Error fetching data:', e);
-          errorOccurred.value = true; // Set error state to true if an error occurs
+          fetchingStatus.value = 2;
         });
     });
 
-    const updateBuffer = (event) => {
-      event.stopPropagation(); // Prevent propagation to leaflet
+    const updateAreas = (event) => {
+      event.stopPropagation();
+      const distance = parseInt(areasGrowMeters.value);
+      const resized  = spectatorLayerGeoJSON.features.map(
+        (feature) => turf.buffer(feature, distance, { units: 'meters' }));
+      // TODO: merge overlapping polygons
+      map.removeLayer(spectatorLayer);
+      spectatorLayer = L.geoJSON(resized, { style: { color: 'blue', fillOpacity: 0.4 } }).addTo(map);
+      map.fitBounds(spectatorLayer.getBounds());
     };
 
     return {
       baseMap,
-      bufferDistance,
-      updateBuffer,
-      loading, // Return loading ref to manage the overlay in the template
-      errorOccurred, // Return errorOccurred ref to manage error state in the template
+      updateAreas,
+      areasGrowMeters,
+      fetchingStatus,
     };
   },
 };
