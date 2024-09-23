@@ -1,8 +1,9 @@
+<!-- vi: set et sw=2 ts=2: -->
 <template>
   <div ref="baseMap" class="base-map">
     <!-- Position the slider properly using CSS -->
-    <div class="slider-container">
-      <input type="range" min="100" max="2000" v-model="bufferDistance" @input="updateBuffer" />
+    <div class="slider-container" @input="updateBuffer" @mousedown.stop @mouseup.stop>
+      <input type="range" min="100" max="2000" v-model="bufferDistance" />
       <p>Buffer Radius: {{ bufferDistance }} meters</p>
     </div>
   </div>
@@ -33,7 +34,7 @@ export default {
     const baseMap = ref(null);
     const bufferDistance = ref(500); // Default radius (in meters)
     let map = null;
-    let circleLayer = null;
+    let bufferLayer = null;
 
     // Base layers
     const baseLayers = {
@@ -63,16 +64,16 @@ export default {
       L.control.layers(baseLayers).addTo(map);
 
       // Draw initial circle around RedBull Ring center
-      updateBuffer();
+      bufferLayer = L.circle(props.center, {
+        radius: bufferDistance.value,
+        color: 'blue',
+      }).addTo(map);
     });
 
-    const updateBuffer = () => {
-      if (circleLayer) {
-        map.removeLayer(circleLayer);
-      }
-
-      // Draw a new circle using the buffer distance from the slider
-      circleLayer = L.circle(props.center, {
+    const updateBuffer = (event) => {
+      event.stopPropagation(); // Prevent propagation to leaflet
+      map.removeLayer(bufferLayer); // Redraw the  buffer layer
+      bufferLayer = L.circle(props.center, {
         radius: bufferDistance.value,
         color: 'blue',
       }).addTo(map);
@@ -101,16 +102,17 @@ export default {
 
 /* Position the slider on top of the map */
 .slider-container {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background-color: rgba(255, 255, 255, 0.8);
-  padding: 10px;
-  border-radius: 4px;
+  position: absolute; bottom: 10px; left: 10px;
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 5px;
   z-index: 1000;
 }
 
-input[type='range'] {
+.slider-container > input[type='range'] {
   width: 150px;
+}
+.slider-container > p {
+    color: black;
+    margin: 0;
 }
 </style>
