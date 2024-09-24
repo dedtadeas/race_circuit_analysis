@@ -31,9 +31,9 @@ export default {
     const bufferSizeMeters = ref(0);
     const fetchStatus = ref(1); // Tracks fetch status - loading: 1, success: 0, or error: 2
     let map = null;
-    let track            = null;
-    let spectators       = null;
-    let spectatorGeoJson = null;
+    let track      = null;
+    let buffer     = null;
+    let spectators = null;
 
     onMounted(() => {
       const layers = {
@@ -67,11 +67,11 @@ export default {
         fetch(`${basePath}/assets/c_data/x1_RedBullRing_Track.geojson`).then(r => r.json()),
         fetch(`${basePath}/assets/c_data/x1_RedBullRing_Spectators.geojson`).then(r => r.json())
       ]).then(([t, s]) => {
-          track      = L.geoJSON(t, { style: { color: 'orange' , fillOpacity: 0.5 } }).addTo(map);
-          spectators = L.geoJSON(s, { style: { color: 'blue', fillOpacity: 0.4 } }).addTo(map);
+          track      = L.geoJSON(t, { style: { color: 'orange' } }).addTo(map);
+          spectators = L.geoJSON(s, { style: { color: 'red'    } }).addTo(map);
+          buffer     = L.geoJSON(s, { style: { color: 'blue', fillOpacity: 0.2 } }).addTo(map);
           map.fitBounds(spectators.getBounds());
           fetchStatus.value = 0;
-          spectatorGeoJson  = spectators.toGeoJSON();
       }).catch((e) => {
           console.error('Error fetching data:', e);
           fetchStatus.value = 2;
@@ -82,11 +82,11 @@ export default {
       event.stopPropagation();
       const distance = parseInt(bufferSizeMeters.value);
       const resized  = turf.union(turf.featureCollection(
-          spectatorGeoJson.features.map(
+          spectators.toGeoJSON().features.map(
             (feature) => turf.buffer(feature, distance, { units: 'meters' }))
-      ));
-      map.removeLayer(spectators);
-      spectators = L.geoJSON(resized, { style: { color: 'blue', fillOpacity: 0.4 } }).addTo(map);
+        ));
+      map.removeLayer(buffer);
+      buffer = L.geoJSON(resized, { style: { color: 'blue', fillOpacity: 0.2 } }).addTo(map);
     };
 
     return {
