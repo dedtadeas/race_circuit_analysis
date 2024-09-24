@@ -10,7 +10,13 @@
     <p>{{ circuitInfo }}</p>
 
     <!-- Pass the zoom and center as props to the map -->
-    <BaseMap :zoom="mapZoom" :center="mapCenter" />
+    <BaseMap 
+      :zoom="mapZoom" 
+      :center="mapCenter" 
+      :trackGeojson="trackGeojson"
+      :spectatorsGeojson="spectatorsGeojson"
+      :civilGeojson="civilGeojson" 
+    />
 
     <!-- Reference Section -->
     <div class="reference-section mt-4">
@@ -45,6 +51,10 @@ export default {
       mapCenter: [0, 0], // Default center (lat, lng)
       circuitImages: [], // Array to hold image URLs
       circuitVideos: [], // Array to hold video details
+      circuitDetails: {}, // Object to hold circuit details
+      trackGeojson: null, // Hold the actual GeoJSON data
+      spectatorsGeojson: null, // Hold the actual GeoJSON data
+      civilGeojson: null, // Hold the actual GeoJSON data
     };
   },
   created() {
@@ -57,6 +67,12 @@ export default {
       this.mapZoom = circuitDetails.zoom; // Optional: You can customize the zoom for each circuit
       this.circuitImages = circuitDetails.images; // Set circuit images
       this.circuitVideos = circuitDetails.videos; // Set circuit videos
+      this.circuitDetails = circuitDetails; // Set circuit details
+
+      // Fetch the GeoJSON data
+      this.loadGeoJSON(circuitDetails.track_geojson, 'trackGeojson');
+      this.loadGeoJSON(circuitDetails.spectators_geojson, 'spectatorsGeojson');
+      this.loadGeoJSON(circuitDetails.civil_geojson, 'civilGeojson');
     }
   },
   methods: {
@@ -68,9 +84,12 @@ export default {
           info: 'RedBull Ring in Austria is a fast track with a lot of elevation changes.', 
           coordinates: [47.2197, 14.7646], 
           zoom: 14,
+          track_geojson: '/assets/c_data/1/geojsons/x1_RedBullRing_Track.geojson',
+          spectators_geojson: '/assets/c_data/1/geojsons/x1_RedBullRing_Spectators.geojson',
+          civil_geojson: '/assets/c_data/1/geojsons/x1_RedBullRing_Civil.geojson',
           images: [
-            '/assets/c_data/images/1/1.jpg',
-            '/assets/c_data/images/1/2.jpg',
+            '/assets/c_data/1/images/1.jpg',
+            '/assets/c_data/1/images/2.jpg',
           ],
           videos: [
             { title: 'RedBull Highlights', url: 'https://www.youtube.com/watch?v=-4FPIL6e4SQ', views: '1M', time: '2 days ago', thumbnail: '/assets/img/thumbnails/redbull-video-1.jpg' },
@@ -79,20 +98,35 @@ export default {
         },
         { 
           id: '2', 
-          name: 'Silverstone Circuit', 
-          info: 'Silverstone is the home of British motorsport.', 
-          coordinates: [52.0786, -1.0169], 
-          zoom: 15,
+          name: 'Circuit de Spa-Francorchamps',
+          info: 'Circuit de Spa-Francorchamps in Belgium is known for its high-speed corners and unpredictable weather.',
+          coordinates: [50.4372, 5.9715],
+          zoom: 14,
+          track_geojson: '/assets/c_data/2/geojsons/x1_Spa_Track.geojson',
+          spectators_geojson: '/assets/c_data/2/geojsons/x1_Spa_Spectators.geojson',
+          civil_geojson: '/assets/c_data/2/geojsons/x1_Spa_Civil.geojson',
           images: [
-            '/assets/img/gallery/silverstone-1.jpg', 
-            '/assets/img/gallery/silverstone-2.jpg'
+            '/assets/c_data/2/images/1.jpg',
+            '/assets/c_data/2/images/2.jpg',
           ],
           videos: [
-            { title: 'Silverstone Recap', url: 'https://www.youtube.com/watch?v=ghi789', views: '2M', time: '3 days ago', thumbnail: '/assets/img/thumbnails/silverstone-video-1.jpg' }
+            { title: 'Spa-Francorchamps Highlights', url: 'https://www.youtube.com/watch?v=-4FPIL6e4SQ', views: '2M', time: '3 days ago', thumbnail: '/assets/img/thumbnails/spa-video-1.jpg' },
+            { title: 'Spa-Francorchamps Onboard Lap', url: 'https://www.youtube.com/watch?v=-4FPIL6e4SQ', views: '1M', time: '1 week ago', thumbnail: '/assets/img/thumbnails/spa-video-2.jpg' }
           ]
         }
       ];
       return circuits.find(circuit => circuit.id === id);
+    },
+    // Fetch GeoJSON data from the provided URL
+    loadGeoJSON(url, targetProperty) {
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          this[targetProperty] = data; // Update the component data with the fetched GeoJSON
+        })
+        .catch(error => {
+          console.error(`Failed to load GeoJSON from ${url}`, error);
+        });
     }
   }
 };
