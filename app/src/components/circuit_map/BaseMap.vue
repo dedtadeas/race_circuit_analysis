@@ -50,8 +50,8 @@ export default {
 
       // Fetch and draw Polygons
       Promise.all([
-        fetch('http://localhost:5173/data/x1_RedBullRing_Track.geojson')     .then(r => r.json()),
-        fetch('http://localhost:5173/data/x1_RedBullRing_Spectators.geojson').then(r => r.json())
+        fetch('./data/x1_RedBullRing_Track.geojson')     .then(r => r.json()),
+        fetch('./data/x1_RedBullRing_Spectators.geojson').then(r => r.json())
       ]).then(([t, s]) => {
           track      = L.geoJSON(t, { style: { color: 'red' , fillOpacity: 0.4 } }).addTo(map);
           spectators = L.geoJSON(s, { style: { color: 'blue', fillOpacity: 0.4 } }).addTo(map);
