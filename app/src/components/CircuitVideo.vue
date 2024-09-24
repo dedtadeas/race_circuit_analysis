@@ -1,3 +1,4 @@
+
 <template>
   <div v-if="videos && videos.length" class="mt-3">
     <h3>YouTube Videos</h3>
@@ -21,7 +22,8 @@
             </div>
           </div>
           <div>
-            <a :href="video.url" class="text-white text-decoration-none d-flex align-items-center" target="_blank">
+            <!-- Wrap the play button with an anchor tag and add data-lity -->
+            <a :href="video.url" class="text-white text-decoration-none d-flex align-items-center" data-lity>
               <div class="bg-gradient-blue-cyan w-50px h-50px rounded-3 d-flex align-items-center justify-content-center">
                 <i class="fa fa-play fa-lg"></i>
               </div>
@@ -40,15 +42,18 @@
   </div>
 </template>
 
+
+
 <script>
 import 'lity';
 import 'lity/dist/lity.min.css';
+
 export default {
   name: 'CircuitVideo',
   props: {
     videos: {
       type: Array,
-      required: true
+      required: false
     }
   }
 }

@@ -69,8 +69,8 @@ export default {
           coordinates: [47.2197, 14.7646], 
           zoom: 14,
           images: [
-            '/data/images/1/1.jpg',
-            '/data/images/1/2.jpg',
+            '/assets/c_data/images/1/1.jpg',
+            '/assets/c_data/images/1/2.jpg',
           ],
           videos: [
             { title: 'RedBull Highlights', url: 'https://www.youtube.com/watch?v=-4FPIL6e4SQ', views: '1M', time: '2 days ago', thumbnail: '/assets/img/thumbnails/redbull-video-1.jpg' },

@@ -7,7 +7,7 @@ export const useAppOptionStore = defineStore({
     	appMode: 'dark',
     	appThemeClass: '',
     	appCoverClass: '',
-		appBoxedLayout: true,
+		appBoxedLayout: false,
 		appHeaderHide: false,
 		appHeaderSearchToggled: false,
 		appSidebarToggled: true,
