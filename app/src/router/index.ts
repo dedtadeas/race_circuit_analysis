@@ -8,7 +8,7 @@ const router = createRouter({
     { path: '/Home', component: () => import('../views/Home.vue') },
     { path: '/', component: () => import('../views/Home.vue') },
     { path: '/Circuits', component: () => import('../views/Circuits.vue') },
-    { path: '/circuits/:id', component: CircuitPage, props: true },
+    { path: '/Circuits/:id', component: CircuitPage, props: true },
     // { path: '/overview', component: () => import('../views/UavControlOverview.vue') },
     // // { path: '/contact', component: () => import('../views/Contact.vue') },
     // { path: '/:pathMatch(.*)*', component: () => import('../views/PageError.vue') }

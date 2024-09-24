@@ -142,11 +142,6 @@ export function generateVariables() {
 			
 			borderColor: (getComputedStyle(document.body).getPropertyValue('--bs-border-color')).trim(),
 			borderColorTranslucent: (getComputedStyle(document.body).getPropertyValue('--bs-border-color-translucent')).trim(),
-
-			droneTagColor: (getComputedStyle(document.body).getPropertyValue('--drone-tag-color')).trim(),
-			adsbColor: (getComputedStyle(document.body).getPropertyValue('--adsb-color')).trim(),
-			uavColor: (getComputedStyle(document.body).getPropertyValue('--uav-color')).trim(),
-			uavSimulatedColor: (getComputedStyle(document.body).getPropertyValue('--uav-simulated-color')).trim()
 		}
 	};
 }
