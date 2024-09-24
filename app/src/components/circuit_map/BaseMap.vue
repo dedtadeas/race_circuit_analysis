@@ -75,15 +75,19 @@ export default {
         if (spectators) map.removeLayer(spectators);
         if (buffer) map.removeLayer(buffer);
 
+        // Add buffer layer first
+        if (spectatorsData) {
+          buffer = L.geoJSON(spectatorsData, { style: { color: 'blue', fillOpacity: 0.2 } }).addTo(map);
+        }
+
         // Add track layer
         if (trackData) {
           track = L.geoJSON(trackData, { style: { color: 'orange' } }).addTo(map);
         }
 
-        // Add spectators layer and buffer
+        // Add spectators layer
         if (spectatorsData) {
-          spectators = L.geoJSON(spectatorsData, { style: { color: 'red' } }).addTo(map);
-          buffer = L.geoJSON(spectatorsData, { style: { color: 'blue', fillOpacity: 0.2 } }).addTo(map);
+          spectators = L.geoJSON(spectatorsData, { style: { color: 'purple' } }).addTo(map);
           map.fitBounds(spectators.getBounds());
         }
 
@@ -110,8 +114,7 @@ export default {
           { minZoom: 1, maxZoom: 19, attribution: 'Map data &copy; OpenStreetMap contributors' }
         ),
       };
-
-                // Overlay layers (OpenAIP)
+                      // Overlay layers (OpenAIP)
       const overlayLayers = {
         OpenAIP: L.tileLayer(
           `https://a.api.tiles.openaip.net/api/data/openaip/{z}/{x}/{y}.png?apiKey=${config.openaipApiKey}`,
@@ -149,6 +152,9 @@ export default {
 
       if (buffer) map.removeLayer(buffer);
       buffer = L.geoJSON(resized, { style: { color: 'blue', fillOpacity: 0.2 } }).addTo(map);
+
+      // Re-add original polygons to ensure they appear on top of the buffer
+      spectators.bringToFront();
     };
 
     return {
@@ -208,5 +214,9 @@ export default {
 .slider-container > p {
   color: black;
   margin: 0;
+}
+
+.leaflet-control-attribution {
+  display: none;
 }
 </style>
