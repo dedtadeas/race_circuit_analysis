@@ -2,15 +2,15 @@
 <template>
   <div ref="baseMap" class="base-map">
     <!-- Loading or error overlay -->
-    <div v-if="fetchingStatus !== 0" class="loading-overlay">
-      <p :class="{ 'error-message': fetchingStatus === 2 }">
-        {{ fetchingStatus === 2 ? 'Error fetching data!' : 'Loading data...' }}
+    <div v-if="fetchStatus !== 0" class="loading-overlay">
+      <p :class="{ 'error-message': fetchStatus === 2 }">
+        {{ fetchStatus === 2 ? 'Error fetching data!' : 'Loading data...' }}
       </p>
     </div>
     <!-- Buffer size slider -->
-    <div class="slider-container" @input.stop @mousedown.stop @mouseup="updateAreas">
-      <input type="range" min="0" max="500" v-model="areasGrowMeters" />
-      <p>Grow: {{ areasGrowMeters }} m</p>
+    <div class="slider-container" @input.stop @mousedown.stop @mouseup="resizeBuffer">
+      <input type="range" min="0" max="500" v-model="bufferSizeMeters" />
+      <p>Buffer: {{ bufferSizeMeters }} m</p>
     </div>
   </div>
 </template>
@@ -28,12 +28,12 @@ export default {
   name: 'BaseMap',
   setup(props) {
     const baseMap = ref(null);
-    const areasGrowMeters = ref(0);
-    const fetchingStatus = ref(1); // Tracks fetch status - loading: 1, success: 0, or error: 2
+    const bufferSizeMeters = ref(0);
+    const fetchStatus = ref(1); // Tracks fetch status - loading: 1, success: 0, or error: 2
     let map = null;
-    let trackLayer = null;
-    let spectatorLayer        = null;
-    let spectatorLayerGeoJSON = null;
+    let track            = null;
+    let spectators       = null;
+    let spectatorGeoJson = null;
 
     onMounted(() => {
       const layers = {
@@ -44,44 +44,42 @@ export default {
           'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
           { minZoom: 1, maxZoom: 19, attribution: 'Map data &copy; OpenStreetMap contributors' }),
       };
-
       map = L.map(baseMap.value, { center: props.center, zoom: props.zoom, layers: [layers.Satellite] });
       map.addControl(new L.Control.Fullscreen());
-      L.control.layers(layers).addTo(map);
+      map.addControl(new L.Control.Layers(layers));
 
       // Fetch and draw Polygons
       Promise.all([
         fetch('http://localhost:5173/data/x1_RedBullRing_Track.geojson')     .then(r => r.json()),
         fetch('http://localhost:5173/data/x1_RedBullRing_Spectators.geojson').then(r => r.json())
       ]).then(([t, s]) => {
-          trackLayer     = L.geoJSON(t, { style: { color: 'red' , fillOpacity: 0.4 } }).addTo(map);
-          spectatorLayer = L.geoJSON(s, { style: { color: 'blue', fillOpacity: 0.4 } }).addTo(map);
-          map.fitBounds(spectatorLayer.getBounds());
-          fetchingStatus.value   = 0;
-          spectatorLayerGeoJSON = spectatorLayer.toGeoJSON();
-        })
-        .catch((e) => {
+          track      = L.geoJSON(t, { style: { color: 'red' , fillOpacity: 0.4 } }).addTo(map);
+          spectators = L.geoJSON(s, { style: { color: 'blue', fillOpacity: 0.4 } }).addTo(map);
+          map.fitBounds(spectators.getBounds());
+          fetchStatus.value = 0;
+          spectatorGeoJson  = spectators.toGeoJSON();
+      }).catch((e) => {
           console.error('Error fetching data:', e);
-          fetchingStatus.value = 2;
-        });
+          fetchStatus.value = 2;
+      });
     });
 
-    const updateAreas = (event) => {
+    const resizeBuffer = (event) => {
       event.stopPropagation();
-      const distance = parseInt(areasGrowMeters.value);
+      const distance = parseInt(bufferSizeMeters.value);
       const resized  = turf.union(turf.featureCollection(
-          spectatorLayerGeoJSON.features.map(
+          spectatorGeoJson.features.map(
             (feature) => turf.buffer(feature, distance, { units: 'meters' }))
       ));
-      map.removeLayer(spectatorLayer);
-      spectatorLayer = L.geoJSON(resized, { style: { color: 'blue', fillOpacity: 0.4 } }).addTo(map);
+      map.removeLayer(spectators);
+      spectators = L.geoJSON(resized, { style: { color: 'blue', fillOpacity: 0.4 } }).addTo(map);
     };
 
     return {
       baseMap,
-      updateAreas,
-      areasGrowMeters,
-      fetchingStatus,
+      resizeBuffer,
+      bufferSizeMeters,
+      fetchStatus,
     };
   },
 };
