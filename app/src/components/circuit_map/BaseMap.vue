@@ -9,8 +9,8 @@
     </div>
     <!-- Buffer size slider -->
     <div class="slider-container" @input.stop @mousedown.stop @mouseup="updateAreas">
-      <input type="range" min="0" max="1000" v-model="areasGrowMeters" />
-      <p>Areas grow: {{ areasGrowMeters }} m</p>
+      <input type="range" min="0" max="500" v-model="areasGrowMeters" />
+      <p>Grow: {{ areasGrowMeters }} m</p>
     </div>
   </div>
 </template>
@@ -29,7 +29,7 @@ export default {
   setup(props) {
     const baseMap = ref(null);
     const areasGrowMeters = ref(0);
-    const fetchingStatus = ref(1); // Tracks fetch status loading: 1, success: 0, or error: 2
+    const fetchingStatus = ref(1); // Tracks fetch status - loading: 1, success: 0, or error: 2
     let map = null;
     let trackLayer = null;
     let spectatorLayer        = null;
@@ -69,12 +69,12 @@ export default {
     const updateAreas = (event) => {
       event.stopPropagation();
       const distance = parseInt(areasGrowMeters.value);
-      const resized  = spectatorLayerGeoJSON.features.map(
-        (feature) => turf.buffer(feature, distance, { units: 'meters' }));
-      // TODO: merge overlapping polygons
+      const resized  = turf.union(turf.featureCollection(
+          spectatorLayerGeoJSON.features.map(
+            (feature) => turf.buffer(feature, distance, { units: 'meters' }))
+      ));
       map.removeLayer(spectatorLayer);
       spectatorLayer = L.geoJSON(resized, { style: { color: 'blue', fillOpacity: 0.4 } }).addTo(map);
-      map.fitBounds(spectatorLayer.getBounds());
     };
 
     return {
