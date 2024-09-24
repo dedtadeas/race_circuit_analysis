@@ -44,9 +44,22 @@ export default {
           'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
           { minZoom: 1, maxZoom: 19, attribution: 'Map data &copy; OpenStreetMap contributors' }),
       };
+          // Overlay layers (OpenAIP)
+      const overlayLayers = {
+        OpenAIP: L.tileLayer(
+          `https://a.api.tiles.openaip.net/api/data/openaip/{z}/{x}/{y}.png?apiKey=${config.openaipApiKey}`,
+          {
+            minZoom: 1,
+            maxZoom: 19,
+            attribution: 'Map data &copy; <a href="https://www.openaip.net/">OpenAIP</a>',
+            crossOrigin: true,
+          }
+        ),
+      };
+
       map = L.map(baseMap.value, { center: props.center, zoom: props.zoom, layers: [layers.Satellite] });
       map.addControl(new L.Control.Fullscreen());
-      map.addControl(new L.Control.Layers(layers));
+      map.addControl(new L.Control.Layers(layers, overlayLayers));
 
       // Fetch and draw Polygons
       const basePath = process.env.NODE_ENV === 'production' ? '/race_circuit_analysis' : '';
