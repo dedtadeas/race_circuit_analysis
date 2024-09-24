@@ -15,6 +15,6 @@ export default defineConfig({
     exclude: ['vue-demi'],
   },
   base: process.env.NODE_ENV === 'production'
-    ? 'race_circuit_analysis' // Replace with your GitHub repo name
+    ? 'race_circuit_analysis'
     : '/',
 });
