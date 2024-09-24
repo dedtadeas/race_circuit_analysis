@@ -49,9 +49,10 @@ export default {
       map.addControl(new L.Control.Layers(layers));
 
       // Fetch and draw Polygons
+      const basePath = process.env.NODE_ENV === 'production' ? '/race_circuit_analysis' : '';
       Promise.all([
-        fetch('/race_circuit_analysis/assets/c_data/x1_RedBullRing_Track.geojson').then(r => r.json()),
-        fetch('/race_circuit_analysis/assets/c_data/x1_RedBullRing_Spectators.geojson').then(r => r.json())
+        fetch(`${basePath}/assets/c_data/x1_RedBullRing_Track.geojson`).then(r => r.json()),
+        fetch(`${basePath}/assets/c_data/x1_RedBullRing_Spectators.geojson`).then(r => r.json())
       ]).then(([t, s]) => {
           track      = L.geoJSON(t, { style: { color: 'orange' , fillOpacity: 0.5 } }).addTo(map);
           spectators = L.geoJSON(s, { style: { color: 'blue', fillOpacity: 0.4 } }).addTo(map);
