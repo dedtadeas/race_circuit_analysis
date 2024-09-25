@@ -15,7 +15,9 @@
       :center="mapCenter" 
       :trackGeojson="trackGeojson"
       :spectatorsGeojson="spectatorsGeojson"
-      :civilGeojson="civilGeojson" 
+      :civilGeojson="civilGeojson"
+      :parkingGeojson="parkingGeojson"
+      :otherGeojson="otherGeojson"
     />
 
     <!-- Reference Section -->
@@ -55,6 +57,8 @@ export default {
       trackGeojson: null, // Hold the actual GeoJSON data
       spectatorsGeojson: null, // Hold the actual GeoJSON data
       civilGeojson: null, // Hold the actual GeoJSON data
+      parkingGeojson: null, // Hold the actual GeoJSON data
+      otherGeojson: null, // Hold the actual GeoJSON data
     };
   },
   created() {
@@ -73,10 +77,13 @@ export default {
       this.loadGeoJSON(circuitDetails.track_geojson, 'trackGeojson');
       this.loadGeoJSON(circuitDetails.spectators_geojson, 'spectatorsGeojson');
       this.loadGeoJSON(circuitDetails.civil_geojson, 'civilGeojson');
+      this.loadGeoJSON(circuitDetails.parking_geojson, 'parkingGeojson');
+      this.loadGeoJSON(circuitDetails.other_geojson, 'otherGeojson');
     }
   },
   methods: {
     getCircuitById(id) {
+      const basePath = process.env.NODE_ENV === 'production' ? '/race_circuit_analysis' : '';
       const circuits = [
         { 
           id: '1', 
@@ -87,13 +94,18 @@ export default {
           track_geojson: '/assets/c_data/1/geojsons/x1_RedBullRing_Track.geojson',
           spectators_geojson: '/assets/c_data/1/geojsons/x1_RedBullRing_Spectators.geojson',
           civil_geojson: '/assets/c_data/1/geojsons/x1_RedBullRing_Civil.geojson',
+          parking_geojson: '/assets/c_data/2/geojsons/x1_RedBullRing_Parking.geojson',
+          other_geojson: '/assets/c_data/2/geojsons/x1_RedBullRing_Other.geojson',
           images: [
-            '/assets/c_data/1/images/1.jpg',
-            '/assets/c_data/1/images/2.jpg',
+            `${basePath}/assets/c_data/1/images/1.jpg`,
+            `${basePath}/assets/c_data/1/images/2.jpg`,
+            `${basePath}/assets/c_data/1/images/3.jpg`,
           ],
           videos: [
-            { title: 'RedBull Highlights', url: 'https://www.youtube.com/watch?v=-4FPIL6e4SQ', views: '1M', time: '2 days ago', thumbnail: '/assets/img/thumbnails/redbull-video-1.jpg' },
-            { title: 'RedBull Onboard Lap', url: 'https://www.youtube.com/watch?v=-4FPIL6e4SQ', views: '500K', time: '1 week ago', thumbnail: '/assets/img/thumbnails/redbull-video-2.jpg' }
+            { title: 'RedBull Highlights', url: 'https://www.youtube.com/watch?v=ndfU8ezntys', views: '1M', time: '2 days ago', thumbnail: '/assets/img/thumbnails/redbull-video-1.jpg' },
+            { title: 'RedBull Ring Experience', url: 'https://www.youtube.com/watch?v=qCKmLYFfKfk', views: '500K', time: '1 week ago', thumbnail: '/assets/img/thumbnails/redbull-video-2.jpg' },
+            { title: 'RedBull Ring', url: 'https://www.youtube.com/watch?v=Ayro0rKQeWg', views: '500K', time: '1 week ago', thumbnail: '/assets/img/thumbnails/redbull-video-2.jpg' },
+            { title: 'RedBull Ring', url: 'https://www.youtube.com/watch?v=gvEYw-L9dek', views: '500K', time: '1 week ago', thumbnail: '/assets/img/thumbnails/redbull-video-2.jpg' }
           ]
         },
         { 
@@ -102,24 +114,35 @@ export default {
           info: 'Circuit de Spa-Francorchamps in Belgium is known for its high-speed corners and unpredictable weather.',
           coordinates: [50.4372, 5.9715],
           zoom: 14,
-          track_geojson: '/assets/c_data/2/geojsons/x1_Spa_Track.geojson',
-          spectators_geojson: '/assets/c_data/2/geojsons/x1_Spa_Spectators.geojson',
-          civil_geojson: '/assets/c_data/2/geojsons/x1_Spa_Civil.geojson',
+          track_geojson: '/assets/c_data/2/geojsons/x2_Spa_Track.geojson',
+          spectators_geojson: '/assets/c_data/2/geojsons/x2_Spa_Spectators.geojson',
+          civil_geojson: '/assets/c_data/2/geojsons/x2_Spa_Civil.geojson',
+          parking_geojson: '/assets/c_data/2/geojsons/x2_Spa_Parking.geojson',
+          other_geojson: '/assets/c_data/2/geojsons/x2_Spa_Other.geojson',
           images: [
-            '/assets/c_data/2/images/1.jpg',
-            '/assets/c_data/2/images/2.jpg',
+            `${basePath}/assets/c_data/2/images/1.jpg`,
+            `${basePath}/assets/c_data/2/images/2.jpg`,
+            `${basePath}/assets/c_data/2/images/3.jpg`,
+            `${basePath}/assets/c_data/2/images/4.jpg`,
+            `${basePath}/assets/c_data/2/images/5.jpg`,
+            `${basePath}/assets/c_data/2/images/6.jpg`,
+            `${basePath}/assets/c_data/2/images/7.jpg`,
+            `${basePath}/assets/c_data/2/images/8.jpg`,
+            `${basePath}/assets/c_data/2/images/9.jpg`
           ],
-          videos: [
-            { title: 'Spa-Francorchamps Highlights', url: 'https://www.youtube.com/watch?v=-4FPIL6e4SQ', views: '2M', time: '3 days ago', thumbnail: '/assets/img/thumbnails/spa-video-1.jpg' },
-            { title: 'Spa-Francorchamps Onboard Lap', url: 'https://www.youtube.com/watch?v=-4FPIL6e4SQ', views: '1M', time: '1 week ago', thumbnail: '/assets/img/thumbnails/spa-video-2.jpg' }
-          ]
+          // videos: [
+          //   { title: 'Spa-Francorchamps Highlights', url: 'https://www.youtube.com/watch?v=-4FPIL6e4SQ', views: '2M', time: '3 days ago', thumbnail: '/assets/img/thumbnails/spa-video-1.jpg' },
+          //   { title: 'Spa-Francorchamps Onboard Lap', url: 'https://www.youtube.com/watch?v=-4FPIL6e4SQ', views: '1M', time: '1 week ago', thumbnail: '/assets/img/thumbnails/spa-video-2.jpg' }
+          // ]
         }
       ];
       return circuits.find(circuit => circuit.id === id);
     },
     // Fetch GeoJSON data from the provided URL
+
     loadGeoJSON(url, targetProperty) {
-      fetch(url)
+      const basePath = process.env.NODE_ENV === 'production' ? '/race_circuit_analysis' : '';
+      fetch(`${basePath}${url}`)
         .then(response => response.json())
         .then(data => {
           this[targetProperty] = data; // Update the component data with the fetched GeoJSON

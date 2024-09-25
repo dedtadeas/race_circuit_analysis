@@ -41,6 +41,14 @@ export default {
       type: [Object, String],
       required: false,
     },
+    parkingGeojson: {
+      type: [Object, String],
+      required: false,
+    },
+    otherGeojson: {
+      type: [Object, String],
+      required: false,
+    },
   },
   setup(props) {
     const baseMap = ref(null);
@@ -68,6 +76,8 @@ export default {
         props.trackGeojson ? loadLayer(props.trackGeojson) : Promise.resolve(null),
         props.spectatorsGeojson ? loadLayer(props.spectatorsGeojson) : Promise.resolve(null),
         props.civilGeojson ? loadLayer(props.civilGeojson) : Promise.resolve(null),
+        props.parkingGeojson ? loadLayer(props.parkingGeojson) : Promise.resolve(null),
+        props.otherGeojson ? loadLayer(props.otherGeojson) : Promise.resolve(null),
       ];
 
       Promise.all(fetchPromises).then(([trackData, spectatorsData, civilData]) => {
@@ -94,6 +104,16 @@ export default {
         // Add civil layer
         if (civilData) {
           L.geoJSON(civilData, { style: { color: 'green' } }).addTo(map);
+        }
+
+        // Add parking layer
+        if (props.parkingGeojson) {
+          L.geoJSON(props.parkingGeojson, { style: { color: 'black' } }).addTo(map);
+        }
+
+        // Add other layer
+        if (props.otherGeojson) {
+          L.geoJSON(props.otherGeojson, { style: { color: 'yellow' } }).addTo(map);
         }
 
         fetchStatus.value = 0;
