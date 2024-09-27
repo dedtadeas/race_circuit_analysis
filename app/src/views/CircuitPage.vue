@@ -85,11 +85,11 @@ export default {
     getCircuitById(id) {
       const basePath = process.env.NODE_ENV === 'production' ? '/race_circuit_analysis' : '';
       const circuits = [
-        { 
-          id: '1', 
-          name: 'RedBull Ring', 
-          info: 'RedBull Ring in Austria is a fast track with a lot of elevation changes.', 
-          coordinates: [47.2197, 14.7646], 
+        {
+          id: '1',
+          name: 'RedBull Ring',
+          info: 'RedBull Ring in Austria is a fast track with a lot of elevation changes.',
+          coordinates: [47.2197, 14.7646],
           zoom: 14,
           track_geojson: '/assets/c_data/1/geojsons/x1_RedBullRing_Track.geojson',
           spectators_geojson: '/assets/c_data/1/geojsons/x1_RedBullRing_Spectators.geojson',
@@ -108,8 +108,8 @@ export default {
             { title: 'RedBull Ring', url: 'https://www.youtube.com/watch?v=gvEYw-L9dek', views: '500K', time: '1 week ago', thumbnail: '/assets/img/thumbnails/redbull-video-2.jpg' }
           ]
         },
-        { 
-          id: '2', 
+        {
+          id: '2',
           name: 'Circuit de Spa-Francorchamps',
           info: 'Circuit de Spa-Francorchamps in Belgium is known for its high-speed corners and unpredictable weather.',
           coordinates: [50.4372, 5.9715],
@@ -134,7 +134,33 @@ export default {
           //   { title: 'Spa-Francorchamps Highlights', url: 'https://www.youtube.com/watch?v=-4FPIL6e4SQ', views: '2M', time: '3 days ago', thumbnail: '/assets/img/thumbnails/spa-video-1.jpg' },
           //   { title: 'Spa-Francorchamps Onboard Lap', url: 'https://www.youtube.com/watch?v=-4FPIL6e4SQ', views: '1M', time: '1 week ago', thumbnail: '/assets/img/thumbnails/spa-video-2.jpg' }
           // ]
-        }
+        },
+        {
+          id: '3',
+          name: 'Sachsenring',
+          info: 'Sachsenring in Germany is a technical track with a lot of elevation changes.',
+          coordinates: [50.7322, 12.7956],
+          zoom: 14,
+          track_geojson: '/assets/c_data/1/geojsons/x1_RedBullRing_Track.geojson',
+          spectators_geojson: '/assets/c_data/1/geojsons/x1_RedBullRing_Spectators.geojson',
+          civil_geojson: '/assets/c_data/1/geojsons/x1_RedBullRing_Civil.geojson',
+          parking_geojson: '/assets/c_data/2/geojsons/x1_RedBullRing_Parking.geojson',
+          other_geojson: '/assets/c_data/2/geojsons/x1_RedBullRing_Other.geojson',
+          images: [
+            `${basePath}/assets/c_data/3/images/1.jpg`,
+            `${basePath}/assets/c_data/3/images/2.jpg`,
+            `${basePath}/assets/c_data/3/images/3.jpg`,
+            `${basePath}/assets/c_data/3/images/4.jpg`,
+            `${basePath}/assets/c_data/3/images/5.jpg`,
+            `${basePath}/assets/c_data/3/images/6.jpg`,
+            `${basePath}/assets/c_data/3/images/7.jpg`,
+          ],
+          videos: [
+            { title: 'LIVE RACE MotoGP German at Sachsenring Circuit', url: 'https://www.youtube.com/watch?v=WNrkqWkmDis', views: '1M', time: '2 days ago', thumbnail: '/assets/img/thumbnails/redbull-video-1.jpg' },
+            { title: 'Highlights 2024', url: 'https://www.youtube.com/watch?v=mgDYq2O3Dog', views: '500K', time: '1 week ago', thumbnail: '/assets/img/thumbnails/redbull-video-2.jpg' },
+            { title: 'Highlights 2 2024', url: 'https://www.youtube.com/watch?v=fOQTUYb_UxU', views: '500K', time: '1 week ago', thumbnail: '/assets/img/thumbnails/redbull-video-2.jpg' },
+          ]
+        },
       ];
       return circuits.find(circuit => circuit.id === id);
     },
