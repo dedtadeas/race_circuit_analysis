@@ -9,8 +9,9 @@
     <h1>{{ circuitName }}</h1>
     <p>{{ circuitInfo }}</p>
     <BaseMap 
-      :zoom="mapZoom" 
-      :center="mapCenter" 
+      :zoom="mapZoom"
+      :center="mapCenter"
+      :layers="mapLayers"
       :trackGeojson="trackGeojson"
       :spectatorsGeojson="spectatorsGeojson"
       :civilGeojson="civilGeojson"
@@ -39,14 +40,9 @@ const circuits = [
   coordinates: [47.2197, 14.7646],
   zoom: 14,
   layers: [
-    {'label': 'spectators', 'has_buffer': true, 'file_path': 'assets/c_data/1/geojsons/x1_RedBullRing_Spectators.geojson'},
-    {'label': 'track'     , 'has_buffer': true, 'file_path': 'assets/c_data/1/geojsons/x1_RedBullRing_Track.geojson'},
+    {'label': 'spectators', 'has_buffer': true , 'file_path': 'assets/c_data/1/geojsons/x1_RedBullRing_Spectators.geojson'},
+    {'label': 'track'     , 'has_buffer': false, 'file_path': 'assets/c_data/1/geojsons/x1_RedBullRing_Track.geojson'},
   ],
-  track_geojson: '/assets/c_data/1/geojsons/x1_RedBullRing_Track.geojson', // TODO: remove
-  spectators_geojson: '/assets/c_data/1/geojsons/x1_RedBullRing_Spectators.geojson', // TODO: remove
-  civil_geojson: '/assets/c_data/1/geojsons/x1_RedBullRing_Civil.geojson', // TODO: remove
-  parking_geojson: '/assets/c_data/2/geojsons/x1_RedBullRing_Parking.geojson', // TODO: remove
-  other_geojson: '/assets/c_data/2/geojsons/x1_RedBullRing_Other.geojson', // TODO: remove
   images: [
     `${basePath}/assets/c_data/1/images/1.jpg`,
     `${basePath}/assets/c_data/1/images/2.jpg`,
@@ -65,11 +61,6 @@ const circuits = [
   info: 'Circuit de Spa-Francorchamps in Belgium is known for its high-speed corners and unpredictable weather.',
   coordinates: [50.4372, 5.9715],
   zoom: 14,
-  track_geojson: '/assets/c_data/2/geojsons/x2_Spa_Track.geojson', // TODO: remove
-  spectators_geojson: '/assets/c_data/2/geojsons/x2_Spa_Spectators.geojson', // TODO: remove
-  civil_geojson: '/assets/c_data/2/geojsons/x2_Spa_Civil.geojson', // TODO: remove
-  parking_geojson: '/assets/c_data/2/geojsons/x2_Spa_Parking.geojson', // TODO: remove
-  other_geojson: '/assets/c_data/2/geojsons/x2_Spa_Other.geojson', // TODO: remove
   layers: [
     {'label': 'parking'           , 'has_buffer': true, 'file_path': 'assets/c_data/2/geojsons/x2_Spa_Parking.geojson'},
     {'label': 'roads'             , 'has_buffer': true, 'file_path': 'assets/c_data/2/geojsons/x2_Spa_Roads.geojson'},
@@ -99,11 +90,6 @@ const circuits = [
   info: 'Sachsenring in Germany is a technical track with a lot of elevation changes.',
   coordinates: [50.7322, 12.7956],
   zoom: 14,
-  track_geojson: '/assets/c_data/1/geojsons/x1_RedBullRing_Track.geojson', // TODO: remove
-  spectators_geojson: '/assets/c_data/1/geojsons/x1_RedBullRing_Spectators.geojson', // TODO: remove
-  civil_geojson: '/assets/c_data/1/geojsons/x1_RedBullRing_Civil.geojson', // TODO: remove
-  parking_geojson: '/assets/c_data/2/geojsons/x1_RedBullRing_Parking.geojson', // TODO: remove
-  other_geojson: '/assets/c_data/2/geojsons/x1_RedBullRing_Other.geojson', // TODO: remove
   layers: [
     {'label': 'civil industrial'  , 'has_buffer': true , 'file_path': 'assets/c_data/3/geojsons/x3_Sachsen_Civil_Industrial.geojson'},
     {'label': 'civil residential' , 'has_buffer': true , 'file_path': 'assets/c_data/3/geojsons/x3_Sachsen_Civil_Residential.geojson'},
@@ -145,6 +131,7 @@ export default {
       circuitInfo: '',
       mapZoom: 16, // Default zoom level
       mapCenter: [0, 0], // Default center (lat, lng)
+      mapLayers: [],
       circuitImages: [], // Array to hold image URLs
       circuitVideos: [], // Array to hold video details
       circuitDetails: {}, // Object to hold circuit details
@@ -159,39 +146,21 @@ export default {
     // Access the id from route params
     const circuitDetails = this.getCircuitById(this.$route.params.id);
     if (circuitDetails) {
+      this.mapZoom = circuitDetails.zoom; // Optional: You can customize the zoom for each circuit
+      this.mapCenter = circuitDetails.coordinates; // Update map center based on circuit details
+      this.mapLayers = circuitDetails.layers
+
       this.circuitName = circuitDetails.name;
       this.circuitInfo = circuitDetails.info;
-      this.mapCenter = circuitDetails.coordinates; // Update map center based on circuit details
-      this.mapZoom = circuitDetails.zoom; // Optional: You can customize the zoom for each circuit
       this.circuitImages = circuitDetails.images; // Set circuit images
       this.circuitVideos = circuitDetails.videos; // Set circuit videos
       this.circuitDetails = circuitDetails; // Set circuit details
-
-      // Fetch the GeoJSON data
-      this.loadGeoJSON(circuitDetails.track_geojson, 'trackGeojson');
-      this.loadGeoJSON(circuitDetails.spectators_geojson, 'spectatorsGeojson');
-      this.loadGeoJSON(circuitDetails.civil_geojson, 'civilGeojson');
-      this.loadGeoJSON(circuitDetails.parking_geojson, 'parkingGeojson');
-      this.loadGeoJSON(circuitDetails.other_geojson, 'otherGeojson');
     }
   },
   methods: {
     getCircuitById(id) {
       return circuits.find(circuit => circuit.id === id);
     },
-    // Fetch GeoJSON data from the provided URL
-
-    loadGeoJSON(url, targetProperty) {
-      const basePath = process.env.NODE_ENV === 'production' ? '/race_circuit_analysis' : '';
-      fetch(`${basePath}${url}`)
-        .then(response => response.json())
-        .then(data => {
-          this[targetProperty] = data; // Update the component data with the fetched GeoJSON
-        })
-        .catch(error => {
-          console.error(`Failed to load GeoJSON from ${url}`, error);
-        });
-    }
   }
 };
 </script>

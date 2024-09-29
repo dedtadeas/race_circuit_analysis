@@ -1,3 +1,4 @@
+<!-- vi: set et sw=2 ts=2: -->
 <template>
   <div ref="baseMap" class="base-map">
     <!-- Loading or error overlay -->
@@ -6,17 +7,18 @@
         {{ fetchStatus === 2 ? 'Error fetching data!' : 'Loading data...' }}
       </p>
     </div>
-
-    <!-- Buffer size slider -->
-    <div class="slider-container" @input.stop @mousedown.stop @mouseup="resizeBuffer">
-      <input type="range" min="0" max="500" v-model="bufferSizeMeters" />
-      <p>Buffer: {{ bufferSizeMeters }} m</p>
+    <!-- Buffer size sliders for each layer -->
+    <div class="slider-container">
+      <div class="slider" v-for="(buffer, index) in buffers" :key="index">
+        <input type="range" min="0" max="500" />
+        <p>{{ buffer.label }}: {{ buffer.size }} m</p>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted } from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-fullscreen';
@@ -26,161 +28,47 @@ import config from '@/config';
 
 export default {
   name: 'BaseMap',
-  props: {
-    center: Array,
-    zoom: Number,
-    trackGeojson: {
-      type: [Object, String],
-      required: false,
-    },
-    spectatorsGeojson: {
-      type: [Object, String],
-      required: false,
-    },
-    civilGeojson: {
-      type: [Object, String],
-      required: false,
-    },
-    parkingGeojson: {
-      type: [Object, String],
-      required: false,
-    },
-    otherGeojson: {
-      type: [Object, String],
-      required: false,
-    },
-  },
+  props: { center: Array, zoom: Number, layers: Array },
   setup(props) {
-    const baseMap = ref(null);
-    const bufferSizeMeters = ref(0);
+    const baseMap     = ref(null);
+    const map         = ref(null);
     const fetchStatus = ref(1); // loading: 1, success: 0, error: 2
-    let map = null;
-    let track = null;
-    let buffer = null;
-    let spectators = null;
+    const layers  = [];
+    const buffers = ref([]);
 
-    const loadGeoJsonLayers = () => {
-      const basePath = process.env.NODE_ENV === 'production' ? '/race_circuit_analysis' : '';
-      console.log('basePath:', basePath);
-      console.log('props:', props);
-
-      // Process trackGeojson (object or fetch string)
-      const loadLayer = (geoJsonData) => {
-        if (typeof geoJsonData === 'string') {
-          return fetch(`${basePath}${geoJsonData}`).then((r) => r.json());
-        }
-        return Promise.resolve(geoJsonData);
+    onMounted(() => {
+      const tileStyles = {
+        Satellite    : L.tileLayer(`https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.jpg?key=${config.mapTilerApiKey}`, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 19, crossOrigin: true }),
+        OpenStreetMap: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { minZoom: 1, maxZoom: 19, attribution: 'Map data &copy; OpenStreetMap contributors' }),
       };
+      const overlapStyles = {
+        OpenAIP: L.tileLayer(`https://a.api.tiles.openaip.net/api/data/openaip/{z}/{x}/{y}.png?apiKey=${config.openaipApiKey}`, { minZoom: 1, maxZoom: 19, attribution: 'Map data &copy; <a href="https://www.openaip.net/">OpenAIP</a>', crossOrigin: true, }),
+      };
+      map.value = L.map(baseMap.value, { center: props.center, zoom: props.zoom, layers: [tileStyles.Satellite], });
+      map.value.addControl(new L.Control.Fullscreen());
+      map.value.addControl(new L.Control.Layers(tileStyles, overlapStyles));
 
-      const fetchPromises = [
-        props.trackGeojson ? loadLayer(props.trackGeojson) : Promise.resolve(null),
-        props.spectatorsGeojson ? loadLayer(props.spectatorsGeojson) : Promise.resolve(null),
-        props.civilGeojson ? loadLayer(props.civilGeojson) : Promise.resolve(null),
-        props.parkingGeojson ? loadLayer(props.parkingGeojson) : Promise.resolve(null),
-        props.otherGeojson ? loadLayer(props.otherGeojson) : Promise.resolve(null),
-      ];
-
-      Promise.all(fetchPromises).then(([trackData, spectatorsData, civilData]) => {
-        if (track) map.removeLayer(track);
-        if (spectators) map.removeLayer(spectators);
-        if (buffer) map.removeLayer(buffer);
-
-        // Add buffer layer first
-        if (spectatorsData) {
-          buffer = L.geoJSON(spectatorsData, { style: { color: 'blue', fillOpacity: 0.2 } }).addTo(map);
+      Promise.all(props.layers.map(
+        (layer) => fetch(`http://localhost:5173/${layer['file_path']}`).then(x => x.json())
+      )).then((data) => {
+        const pallete    = ['#FF0000', '#00FF00', '#FFFF00', '#0000FF', '#FF00FF', '#00FFFF', '#FFFFFF'];
+        const tmpBuffers = [];
+        for (let i = 0; i < data.length; ++i) {
+          layers.push(L.geoJSON(data[i], { style: { color: pallete[i % pallete.length] } }).addTo(map.value));
+          if (props.layers[i].has_buffer)
+            tmpBuffers.push({layer: i, size: 0, ...props.layers[i]});
         }
-
-        // Add track layer
-        if (trackData) {
-          track = L.geoJSON(trackData, { style: { color: 'orange' } }).addTo(map);
-        }
-
-        // Add spectators layer
-        if (spectatorsData) {
-          spectators = L.geoJSON(spectatorsData, { style: { color: 'purple' } }).addTo(map);
-          map.fitBounds(spectators.getBounds());
-        }
-
-        // Add civil layer
-        if (civilData) {
-          L.geoJSON(civilData, { style: { color: 'green' } }).addTo(map);
-        }
-
-        // Add parking layer
-        if (props.parkingGeojson) {
-          L.geoJSON(props.parkingGeojson, { style: { color: 'black' } }).addTo(map);
-        }
-
-        // Add other layer
-        if (props.otherGeojson) {
-          L.geoJSON(props.otherGeojson, { style: { color: 'yellow' } }).addTo(map);
-        }
-
+        buffers.value     = tmpBuffers;
         fetchStatus.value = 0;
       }).catch((e) => {
         console.error('Error fetching data:', e);
         fetchStatus.value = 2;
       });
-    };
-
-    onMounted(() => {
-      const layers = {
-        Satellite: L.tileLayer(
-          `https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.jpg?key=${config.mapTilerApiKey}`,
-          { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 19, crossOrigin: true }
-        ),
-        OpenStreetMap: L.tileLayer(
-          'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-          { minZoom: 1, maxZoom: 19, attribution: 'Map data &copy; OpenStreetMap contributors' }
-        ),
-      };
-                      // Overlay layers (OpenAIP)
-      const overlayLayers = {
-        OpenAIP: L.tileLayer(
-          `https://a.api.tiles.openaip.net/api/data/openaip/{z}/{x}/{y}.png?apiKey=${config.openaipApiKey}`,
-          {
-            minZoom: 1,
-            maxZoom: 19,
-            attribution: 'Map data &copy; <a href="https://www.openaip.net/">OpenAIP</a>',
-            crossOrigin: true,
-          }
-        ),
-      };
-
-      map = L.map(baseMap.value, {
-        center: props.center,
-        zoom: props.zoom,
-        layers: [layers.Satellite],
-      });
-
-      map.addControl(new L.Control.Fullscreen());
-      map.addControl(new L.Control.Layers(layers, overlayLayers));
-
-      loadGeoJsonLayers(); // Load the layers when the map is mounted
     });
-
-    // Watch for changes in the props (if switching circuits dynamically)
-    watch(() => [props.trackGeojson, props.spectatorsGeojson, props.civilGeojson], loadGeoJsonLayers);
-
-    const resizeBuffer = () => {
-      const distance = parseInt(bufferSizeMeters.value, 10);
-      const resized = turf.union(turf.featureCollection(
-        spectators.toGeoJSON().features.map(
-          (feature) => turf.buffer(feature, distance, { units: 'meters' })
-        )
-      ));
-
-      if (buffer) map.removeLayer(buffer);
-      buffer = L.geoJSON(resized, { style: { color: 'blue', fillOpacity: 0.2 } }).addTo(map);
-
-      // Re-add original polygons to ensure they appear on top of the buffer
-      spectators.bringToFront();
-    };
 
     return {
       baseMap,
-      resizeBuffer,
-      bufferSizeMeters,
+      buffers,
       fetchStatus,
     };
   },
@@ -219,19 +107,17 @@ export default {
 }
 
 .slider-container {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
   background-color: rgba(255, 255, 255, 0.7);
   padding: 5px;
+  position: absolute; bottom: 10px; left: 10px;
   z-index: 1000;
 }
 
-.slider-container > input[type='range'] {
+.slider > input[type='range'] {
   width: 150px;
 }
 
-.slider-container > p {
+.slider > p {
   color: black;
   margin: 0;
 }
@@ -240,3 +126,5 @@ export default {
   display: none;
 }
 </style>
+
+
