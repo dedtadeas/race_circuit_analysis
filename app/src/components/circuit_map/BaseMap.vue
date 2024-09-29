@@ -1,4 +1,3 @@
-<!-- vi: set et sw=2 ts=2: -->
 <template>
   <div ref="baseMap" class="base-map">
     <!-- Loading or error overlay -->
@@ -8,9 +7,9 @@
       </p>
     </div>
     <!-- Buffer size sliders for each layer -->
-    <div class="slider-container" @input.stop @mousedown.stop @mouseup.stop >
+    <div class="slider-container">
       <div class="slider" v-for="(buffer, index) in buffers" :key="index">
-        <input type="range" min="0" max="500" v-model="buffer.size" />
+        <input type="range" min="0" max="500" v-model="buffer.size" @input="updateBuffer(buffer)" />
         <p>{{ buffer.label }}: {{ buffer.size }} m</p>
       </div>
     </div>
@@ -35,6 +34,15 @@ export default {
     const fetchStatus = ref(1); // loading: 1, success: 0, error: 2
     const layers  = [];
     const buffers = ref([]);
+    const pallete = ['#FF0000', '#00FF00', '#FFFF00', '#0000FF', '#FF00FF', '#00FFFF', '#FFFFFF'];
+
+    const updateBuffer = (buffer) => {
+      if (buffer.layerBuffer)
+        map.value.removeLayer(buffer.layerBuffer);
+      buffer.layerBuffer = L.geoJSON(
+        turf.buffer(layers[buffer.layer], buffer.size, { units: 'meters' }),
+        { style: { color: pallete[buffer.layer] } }).addTo(map.value);
+    };
 
     onMounted(() => {
       const tileStyles = {
@@ -51,10 +59,9 @@ export default {
       Promise.all(props.layers.map(
         (layer) => fetch(`http://localhost:5173/${layer['file_path']}`).then(x => x.json())
       )).then((data) => {
-        const pallete    = ['#FF0000', '#00FF00', '#FFFF00', '#0000FF', '#FF00FF', '#00FFFF', '#FFFFFF'];
         const tmpBuffers = [];
         for (let i = 0; i < data.length; ++i) {
-          layers.push(L.geoJSON(data[i], { style: { color: pallete[i % pallete.length] } }).addTo(map.value));
+          layers.push(L.geoJSON(data[i], { style: { color: pallete[i % pallete.length] } }).addTo(map.value).toGeoJSON());
           if (props.layers[i].has_buffer)
             tmpBuffers.push({layer: i, size: 0, ...props.layers[i]});
         }
@@ -70,6 +77,7 @@ export default {
       baseMap,
       buffers,
       fetchStatus,
+      updateBuffer,
     };
   },
 };
@@ -119,11 +127,11 @@ export default {
 
 .slider > p {
   color: black;
+  margin: 0;
 }
 
 .leaflet-control-attribution {
   display: none;
 }
 </style>
-
 
