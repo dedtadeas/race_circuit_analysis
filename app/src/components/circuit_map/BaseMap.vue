@@ -17,6 +17,7 @@
 </template>
 
 <script>
+    //TODO: Add google satelite map to the map
 import { ref, onMounted } from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
