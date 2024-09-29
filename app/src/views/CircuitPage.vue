@@ -33,8 +33,7 @@ import CircuitGallery from '../components/CircuitGallery.vue'; // Import the new
 
 const basePath = process.env.NODE_ENV === 'production' ? '/race_circuit_analysis' : '';
 const circuits = [
-{
-  id: '1',
+{id: '1',
   name: 'RedBull Ring',
   info: 'RedBull Ring in Austria is a fast track with a lot of elevation changes.',
   coordinates: [47.2197, 14.7646],
@@ -83,30 +82,30 @@ const circuits = [
   //   { title: 'Spa-Francorchamps Onboard Lap', url: 'https://www.youtube.com/watch?v=-4FPIL6e4SQ', views: '1M', time: '1 week ago', thumbnail: '/assets/img/thumbnails/spa-video-2.jpg' }
   // ]
 },
-{id: '3',
+{id: '5',
   name: 'Sachsenring',
   info: 'Sachsenring in Germany is a technical track with a lot of elevation changes.',
-  coordinates: [50.7322, 12.7956],
+  coordinates: [50.7916, 12.6868],
   zoom: 14,
   layers: [
-    {'label': 'civil industrial'  , 'has_buffer': true , 'file_path': 'assets/c_data/3/geojsons/x3_Sachsen_Civil_Industrial.geojson'},
-    {'label': 'civil residential' , 'has_buffer': true , 'file_path': 'assets/c_data/3/geojsons/x3_Sachsen_Civil_Residential.geojson'},
-    {'label': 'other'             , 'has_buffer': true , 'file_path': 'assets/c_data/3/geojsons/x3_Sachsen_Other.geojson'},
-    {'label': 'parking'           , 'has_buffer': true , 'file_path': 'assets/c_data/3/geojsons/x3_Sachsen_Parking.geojson'},
-    {'label': 'roads'             , 'has_buffer': true , 'file_path': 'assets/c_data/3/geojsons/x3_Sachsen_Roads.geojson'},
-    {'label': 'spectators AC'     , 'has_buffer': true , 'file_path': 'assets/c_data/3/geojsons/x3_Sachsen_Spectators_AC.geojson'},
-    {'label': 'spectators stand'  , 'has_buffer': true , 'file_path': 'assets/c_data/3/geojsons/x3_Sachsen_Spectators_Stand.geojson'},
-    {'label': 'spectators tribune', 'has_buffer': true , 'file_path': 'assets/c_data/3/geojsons/x3_Sachsen_Spectators_Tribune.geojson'},
-    {'label': 'track'             , 'has_buffer': false, 'file_path': 'assets/c_data/3/geojsons/x3_Sachsen_Track.geojson'},
+    {'label': 'civil industrial'  , 'has_buffer': true , 'file_path': 'assets/c_data/5/geojsons/x5_Sachsen_Civil_Industrial.geojson'},
+    {'label': 'civil residential' , 'has_buffer': true , 'file_path': 'assets/c_data/5/geojsons/x5_Sachsen_Civil_Residential.geojson'},
+    {'label': 'other'             , 'has_buffer': true , 'file_path': 'assets/c_data/5/geojsons/x5_Sachsen_Other.geojson'},
+    {'label': 'parking'           , 'has_buffer': true , 'file_path': 'assets/c_data/5/geojsons/x5_Sachsen_Parking.geojson'},
+    {'label': 'roads'             , 'has_buffer': true , 'file_path': 'assets/c_data/5/geojsons/x5_Sachsen_Roads.geojson'},
+    {'label': 'spectators AC'     , 'has_buffer': true , 'file_path': 'assets/c_data/5/geojsons/x5_Sachsen_Spectators_AC.geojson'},
+    {'label': 'spectators stand'  , 'has_buffer': true , 'file_path': 'assets/c_data/5/geojsons/x5_Sachsen_Spectators_Stand.geojson'},
+    {'label': 'spectators tribune', 'has_buffer': true , 'file_path': 'assets/c_data/5/geojsons/x5_Sachsen_Spectators_Tribune.geojson'},
+    {'label': 'track'             , 'has_buffer': false, 'file_path': 'assets/c_data/5/geojsons/x5_Sachsen_Track.geojson'},
   ],
   images: [
-    `${basePath}/assets/c_data/3/images/1.jpg`,
-    `${basePath}/assets/c_data/3/images/2.jpg`,
-    `${basePath}/assets/c_data/3/images/3.jpg`,
-    `${basePath}/assets/c_data/3/images/4.jpg`,
-    `${basePath}/assets/c_data/3/images/5.jpg`,
-    `${basePath}/assets/c_data/3/images/6.jpg`,
-    `${basePath}/assets/c_data/3/images/7.jpg`,
+    `${basePath}/assets/c_data/5/images/1.jpg`,
+    `${basePath}/assets/c_data/5/images/2.jpg`,
+    `${basePath}/assets/c_data/5/images/3.jpg`,
+    `${basePath}/assets/c_data/5/images/4.jpg`,
+    `${basePath}/assets/c_data/5/images/5.jpg`,
+    `${basePath}/assets/c_data/5/images/6.jpg`,
+    `${basePath}/assets/c_data/5/images/7.jpg`,
   ],
   videos: [
     { title: 'LIVE RACE MotoGP German at Sachsenring Circuit', url: 'https://www.youtube.com/watch?v=WNrkqWkmDis', views: '1M', time: '2 days ago', thumbnail: '/assets/img/thumbnails/redbull-video-1.jpg' },
