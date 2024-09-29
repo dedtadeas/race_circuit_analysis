@@ -60,8 +60,9 @@ export default {
       map.value.addControl(new L.Control.Fullscreen());
       map.value.addControl(new L.Control.Layers(tileStyles, overlapStyles));
 
+      const basePath = process.env.NODE_ENV === 'production' ? '/race_circuit_analysis' : '';
       Promise.all(props.layers.map(
-        (layer) => fetch(`http://localhost:5173/${layer['file_path']}`).then(x => x.json())
+        (layer) => fetch(`${basePath}/${layer['file_path']}`).then(x => x.json())
       )).then((data) => {
         const tmpBuffers = [];
         for (let i = 0; i < data.length; ++i) {
