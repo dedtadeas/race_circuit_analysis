@@ -8,9 +8,9 @@
       </p>
     </div>
     <!-- Buffer size sliders for each layer -->
-    <div class="slider-container">
+    <div class="slider-container" @input.stop @mousedown.stop @mouseup.stop >
       <div class="slider" v-for="(buffer, index) in buffers" :key="index">
-        <input type="range" min="0" max="500" />
+        <input type="range" min="0" max="500" v-model="buffer.size" />
         <p>{{ buffer.label }}: {{ buffer.size }} m</p>
       </div>
     </div>
@@ -108,9 +108,9 @@ export default {
 
 .slider-container {
   background-color: rgba(255, 255, 255, 0.7);
-  padding: 5px;
   position: absolute; bottom: 10px; left: 10px;
   z-index: 1000;
+  padding: 10px;
 }
 
 .slider > input[type='range'] {
@@ -119,7 +119,6 @@ export default {
 
 .slider > p {
   color: black;
-  margin: 0;
 }
 
 .leaflet-control-attribution {
