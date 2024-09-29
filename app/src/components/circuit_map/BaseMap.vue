@@ -39,9 +39,12 @@ export default {
     const updateBuffer = (buffer) => {
       if (buffer.layerBuffer)
         map.value.removeLayer(buffer.layerBuffer);
-      buffer.layerBuffer = L.geoJSON(
-        turf.buffer(layers[buffer.layer], buffer.size, { units: 'meters' }),
-        { style: { color: pallete[buffer.layer] } }).addTo(map.value);
+
+      const resized = turf.union(turf.featureCollection(
+        layers[buffer.layer].features.map(
+          (feature) => turf.buffer(feature, buffer.size, { units: 'meters' }))
+      ));
+      buffer.layerBuffer = L.geoJSON(resized, { style: { color: pallete[buffer.layer] } }).addTo(map.value);
     };
 
     onMounted(() => {
