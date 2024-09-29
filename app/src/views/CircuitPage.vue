@@ -55,8 +55,7 @@ const circuits = [
     { title: 'RedBull Ring', url: 'https://www.youtube.com/watch?v=gvEYw-L9dek', views: '500K', time: '1 week ago', thumbnail: '/assets/img/thumbnails/redbull-video-2.jpg' }
   ]
 },
-{
-  id: '2',
+{id: '2',
   name: 'Circuit de Spa-Francorchamps',
   info: 'Circuit de Spa-Francorchamps in Belgium is known for its high-speed corners and unpredictable weather.',
   coordinates: [50.4372, 5.9715],
@@ -84,8 +83,7 @@ const circuits = [
   //   { title: 'Spa-Francorchamps Onboard Lap', url: 'https://www.youtube.com/watch?v=-4FPIL6e4SQ', views: '1M', time: '1 week ago', thumbnail: '/assets/img/thumbnails/spa-video-2.jpg' }
   // ]
 },
-{
-  id: '3',
+{id: '3',
   name: 'Sachsenring',
   info: 'Sachsenring in Germany is a technical track with a lot of elevation changes.',
   coordinates: [50.7322, 12.7956],
@@ -115,6 +113,38 @@ const circuits = [
     { title: 'Highlights 2024', url: 'https://www.youtube.com/watch?v=mgDYq2O3Dog', views: '500K', time: '1 week ago', thumbnail: '/assets/img/thumbnails/redbull-video-2.jpg' },
     { title: 'Highlights 2 2024', url: 'https://www.youtube.com/watch?v=fOQTUYb_UxU', views: '500K', time: '1 week ago', thumbnail: '/assets/img/thumbnails/redbull-video-2.jpg' },
   ]
+  },
+{id: '6',
+  name: 'Nürburgring',
+  info: 'Nürburgring in Germany is a technical track with a lot of elevation changes.',
+  coordinates: [50.3356, 6.9475],
+  zoom: 14,
+  layers: [
+    // {'label': 'civil industrial'  , 'has_buffer': true , 'file_path': 'assets/c_data/6/geojsons/x6_Nurburgring_Civil_Industrial.geojson'},
+    {'label': 'civil residential' , 'has_buffer': true , 'file_path': 'assets/c_data/6/geojsons/x6_Nurburgring_Civil_Residential.geojson'},
+    {'label': 'other'             , 'has_buffer': true , 'file_path': 'assets/c_data/6/geojsons/x6_Nurburgring_Other.geojson'},
+    {'label': 'parking'           , 'has_buffer': true , 'file_path': 'assets/c_data/6/geojsons/x6_Nurburgring_Parking.geojson'},
+    {'label': 'roads'             , 'has_buffer': true , 'file_path': 'assets/c_data/6/geojsons/x6_Nurburgring_Roads.geojson'},
+    {'label': 'spectators AC'     , 'has_buffer': true , 'file_path': 'assets/c_data/6/geojsons/x6_Nurburgring_Spectators_AC.geojson'},
+    {'label': 'spectators stand'  , 'has_buffer': true , 'file_path': 'assets/c_data/6/geojsons/x6_Nurburgring_Spectators_Stand.geojson'},
+    {'label': 'spectators tribune', 'has_buffer': true , 'file_path': 'assets/c_data/6/geojsons/x6_Nurburgring_Spectators_Tribune.geojson'},
+    {'label': 'track'             , 'has_buffer': false, 'file_path': 'assets/c_data/6/geojsons/x6_Nurburgring_Track.geojson'},
+  ],
+  images: [
+    `${basePath}/assets/c_data/6/images/1.jpg`,
+    `${basePath}/assets/c_data/6/images/2.jpg`,
+    `${basePath}/assets/c_data/6/images/3.jpg`,
+    `${basePath}/assets/c_data/6/images/4.jpg`,
+    `${basePath}/assets/c_data/6/images/5.jpg`,
+    `${basePath}/assets/c_data/6/images/6.jpg`,
+    `${basePath}/assets/c_data/6/images/7.jpg`,
+    `${basePath}/assets/c_data/6/images/8.jpg`,
+    `${basePath}/assets/c_data/6/images/9.jpg`,
+    `${basePath}/assets/c_data/6/images/10.jpg`
+  ],
+  videos: [
+    { title: 'LIVE RACE 24 h', url: 'https://www.youtube.com/watch?v=84N89QJUEXY', views: '1M', time: '2 days ago', thumbnail: '/assets/img/thumbnails/redbull-video-1.jpg' },
+]
 },
 ];
 

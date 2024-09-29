@@ -42,11 +42,11 @@ export default {
         // France: [
         //   { id: 4, name: "Le Mans Circuit" }
         // ],
-        // Germany: [
-        //   { id: 5, name: "Sachsenring Circuit" },
-        //   { id: 6, name: "Nürburgring" },
-        //   { id: 7, name: "Hockenheim" }
-        // ],
+        Germany: [
+          { id: 5, name: "Sachsenring Circuit" },
+          { id: 6, name: "Nürburgring" },
+          { id: 7, name: "Hockenheim" }
+        ],
         // Czech_Republic: [
         //   { id: 8, name: "Autodromo Brno" }
         // ],
