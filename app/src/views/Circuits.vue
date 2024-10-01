@@ -87,9 +87,9 @@ export default {
         // Qatar: [
         //   { id: 25, name: "Losail International Circuit" }
         // ],
-        // Saudi_Arabia: [
-        //   { id: 26, name: "Jeddah Street Circuit" }
-        // ],
+        Saudi_Arabia: [
+          { id: 26, name: "Jeddah Street Circuit" }
+        ],
         // UAE: [
         //   { id: 27, name: "Yas Marina Circuit" }
         // ]

@@ -202,7 +202,43 @@ const circuits = [
 //   videos: [
 //     { title: 'LIVE RACE 24 h', url: 'https://www.youtube.com/watch?v=84N89QJUEXY', views: '1M', time: '2 days ago', thumbnail: '/assets/img/thumbnails/redbull-video-1.jpg' },
 // ]
-},
+  },
+  {id: '26',
+    name: 'Jeddah Street Circuit',
+    info: '',
+    links: [
+      { title: 'Official website', url: 'https://jeddahcircuit.com/motorsport' },
+      { title: 'F1 Records', url: 'https://www.formula1.com/en/video/jeddah-street-circuit-first-look-f1s-brand-new-track-in-saudi-arabia.1715401112473745964' },
+    ],
+    coordinates: [21.6315, 39.1046],
+    zoom: 14,
+    layers: [
+      {'label': 'civil'  , 'has_buffer': true , 'file_path': 'assets/c_data/26/geojsons/x26_Jeddah_Civil.geojson'},
+      { 'label': 'other', 'has_buffer': true, 'file_path': 'assets/c_data/26/geojsons/x26_Jeddah_Other.geojson' },
+      { 'label': 'parking', 'has_buffer': true, 'file_path': 'assets/c_data/26/geojsons/x26_Jeddah_Parking.geojson' },
+      { 'label': 'paddock', 'has_buffer': false, 'file_path': 'assets/c_data/26/geojsons/x26_Jeddah_Paddock.geojson' },
+      { 'label': 'roads', 'has_buffer': true, 'file_path': 'assets/c_data/26/geojsons/x26_Jeddah_Roads.geojson' },
+      { 'label': 'spectators AC', 'has_buffer': true, 'file_path': 'assets/c_data/26/geojsons/x26_Jeddah_Spectators_AC.geojson' },
+      // { 'label': 'spectators stand', 'has_buffer': true, 'file_path': 'assets/c_data/26/geojsons/x26_Jeddah_Spectators_Stand.geojson' },
+      { 'label': 'spectators tribune', 'has_buffer': true, 'file_path': 'assets/c_data/26/geojsons/x26_Jeddah_Spectators_Tribune.geojson' },
+      { 'label': 'track', 'has_buffer': false, 'file_path': 'assets/c_data/26/geojsons/x26_Jeddah_Track.geojson' },
+    ],
+    images: [
+      `${basePath}/assets/c_data/26/images/1.jpg`,
+      `${basePath}/assets/c_data/26/images/2.jpg`,
+      `${basePath}/assets/c_data/26/images/3.jpg`,
+      `${basePath}/assets/c_data/26/images/4.jpg`,
+      `${basePath}/assets/c_data/26/images/5.jpg`,
+      `${basePath}/assets/c_data/26/images/6.jpg`,
+      `${basePath}/assets/c_data/26/images/7.jpg`,
+      `${basePath}/assets/c_data/26/images/8.jpg`,
+      `${basePath}/assets/c_data/26/images/9.jpg`,
+      `${basePath}/assets/c_data/26/images/10.jpg`
+    ],
+    //   videos: [
+    //     { title: 'LIVE RACE 24 h', url: 'https://www.youtube.com/watch?v=84N89QJUEXY', views: '1M', time: '2 days ago', thumbnail: '/assets/img/thumbnails/redbull-video-1.jpg' },
+    // ]
+  },
 ];
 
 export default {
