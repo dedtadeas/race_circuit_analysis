@@ -38,14 +38,18 @@ export default {
     const pallete = ['#FF0000', '#00FF00', '#FFFF00', '#0000FF', '#FF00FF', '#00FFFF', '#FFFFFF'];
 
     const updateBuffer = (buffer) => {
-      if (buffer.layerBuffer)
+      if (buffer.layerBuffer) {
         map.value.removeLayer(buffer.layerBuffer);
+        buffer.layerBuffer = null;
+      }
 
-      const resized = turf.union(turf.featureCollection(
-        layers[buffer.layer].features.map(
-          (feature) => turf.buffer(feature, buffer.size, { units: 'meters' }))
-      ));
-      buffer.layerBuffer = L.geoJSON(resized, { style: { color: pallete[buffer.layer] } }).addTo(map.value);
+      if (buffer.size > 0) {
+        const resized = turf.union(turf.featureCollection(
+          layers[buffer.layer].features.map(
+            (feature) => turf.buffer(feature, buffer.size, { units: 'meters' }))
+        ));
+        buffer.layerBuffer = L.geoJSON(resized, { style: { color: pallete[buffer.layer] } }).addTo(map.value);
+      }
     };
 
     onMounted(() => {
