@@ -9,15 +9,22 @@
     <!-- Buffer size sliders for each layer -->
     <div class="slider-container">
       <div class="slider" v-for="(buffer, index) in buffers" :key="index">
-        <input type="range" min="0" max="200" v-model="buffer.size" @input="updateBuffer(buffer)" />
-        <p>{{ buffer.label }}: {{ buffer.size }} m</p>
+        <strong>{{ buffer.label.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
+          }}</strong>
+
+        <div class="slider-input-container">
+          <input type="range" min="0" max="200" v-model="buffer.size" @input="updateBuffer(buffer)"
+            @mousedown="stopMapMovement" class="slider-range" />
+          <input type="number" min="0" max="200" v-model="buffer.size" @input="updateBuffer(buffer)"
+            class="ms-2 buffer-input " />
+          <span class="unit">m</span>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-    //TODO: Add google satelite map to the map
 import { ref, onMounted } from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -30,10 +37,10 @@ export default {
   name: 'BaseMap',
   props: { center: Array, zoom: Number, layers: Array },
   setup(props) {
-    const baseMap     = ref(null);
-    const map         = ref(null);
+    const baseMap = ref(null);
+    const map = ref(null);
     const fetchStatus = ref(1); // loading: 1, success: 0, error: 2
-    const layers  = [];
+    const layers = [];
     const buffers = ref([]);
     const pallete = ['#FF0000', '#00FF00', '#FFFF00', '#0000FF', '#FF00FF', '#00FFFF', '#FFFFFF'];
 
@@ -58,14 +65,17 @@ export default {
         }
       }
     };
-
+    const stopMapMovement = (event) => {
+      console.log('stopMapMovement');
+      event.stopPropagation();
+    };
     onMounted(() => {
       const tileStyles = {
-        Satellite    : L.tileLayer(`https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.jpg?key=${config.mapTilerApiKey}`, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 19, crossOrigin: true }),
+        Satellite: L.tileLayer(`https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.jpg?key=${config.mapTilerApiKey}`, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 19, crossOrigin: true }),
         OpenStreetMap: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { minZoom: 1, maxZoom: 19, attribution: 'Map data &copy; OpenStreetMap contributors' }),
       };
       const overlapStyles = {
-        OpenAIP: L.tileLayer(`https://a.api.tiles.openaip.net/api/data/openaip/{z}/{x}/{y}.png?apiKey=${config.openaipApiKey}`, { minZoom: 1, maxZoom: 19, attribution: 'Map data &copy; <a href="https://www.openaip.net/">OpenAIP</a>', crossOrigin: true, }),
+        OpenAIP: L.tileLayer(`https://a.api.tiles.openaip.net/api/data/openaip/{z}/{x}/{y}.png?apiKey=${config.openaipApiKey}`, { minZoom: 1, maxZoom: 19, attribution: 'Map data &copy; <a href="https://www.openaip.net/">OpenAIP</a>', crossOrigin: true }),
       };
       map.value = L.map(baseMap.value, { center: props.center, zoom: props.zoom, layers: [tileStyles.Satellite], zoomAnimation: false });
       map.value.addControl(new L.Control.Fullscreen());
@@ -80,9 +90,9 @@ export default {
           const color = pallete[i % pallete.length];
           layers.push(L.geoJSON(data[i], { style: { color: color } }).addTo(map.value).toGeoJSON());
           if (props.layers[i].has_buffer)
-            tmpBuffers.push({layer: i, size: 0, color: color, ...props.layers[i]});
+            tmpBuffers.push({ layer: i, size: 0, color: color, ...props.layers[i] });
         }
-        buffers.value     = tmpBuffers;
+        buffers.value = tmpBuffers;
         fetchStatus.value = 0;
       }).catch((e) => {
         console.error('Error fetching data:', e);
@@ -95,6 +105,7 @@ export default {
       buffers,
       fetchStatus,
       updateBuffer,
+      stopMapMovement, 
     };
   },
 };
@@ -132,23 +143,93 @@ export default {
 }
 
 .slider-container {
-  background-color: rgba(255, 255, 255, 0.7);
-  position: absolute; bottom: 10px; left: 10px;
+  background-color: rgba(58, 58, 58, 0.7);
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
   z-index: 1000;
   padding: 10px;
 }
 
-.slider > input[type='range'] {
-  width: 150px;
+.slider {
+  margin-bottom: 10px;
 }
 
-.slider > p {
-  color: black;
-  margin: 0;
+.slider>strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.slider-input-container {
+  padding: 2px;
+  display: flex;
+  align-items: center;
+}
+
+.slider-range {
+  -webkit-appearance: none;
+  /* Override default styling */
+  appearance: none;
+  width: 100%;
+  /* Full width */
+  height: 8px;
+  /* Height of the track */
+  background: #ddd;
+  /* Track color */
+  border-radius: 5px;
+  /* Round corners of the track */
+  outline: none;
+  /* Remove outline */
+}
+
+/* Style the thumb */
+.slider-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  /* Override default styling */
+  appearance: none;
+  width: 16px;
+  /* Thumb width */
+  height: 16px;
+  /* Thumb height */
+  border-radius: 50%;
+  /* Round thumb */
+  background: var(--bs-theme);
+  /* Thumb color */
+  cursor: pointer;
+  /* Pointer cursor on hover */
+}
+
+.slider-range::-moz-range-thumb {
+  width: 16px;
+  /* Thumb width */
+  height: 16px;
+  /* Thumb height */
+  border-radius: 50%;
+  /* Round thumb */
+  background: var(--bs-theme);
+  /* Thumb color */
+  cursor: pointer;
+  /* Pointer cursor on hover */
+}
+
+/* Optional: Change thumb color on hover */
+.slider-range::-webkit-slider-thumb:hover {
+  background: var(--bs-theme);
+  /* Darker green on hover */
+}
+
+.slider-range::-moz-range-thumb:hover {
+  background: var(--bs-theme);
+  /* Darker green on hover */
+}
+
+
+.unit {
+  margin-left: 5px;
+  /* Space between input and unit */
 }
 
 .leaflet-control-attribution {
   display: none;
 }
 </style>
-
