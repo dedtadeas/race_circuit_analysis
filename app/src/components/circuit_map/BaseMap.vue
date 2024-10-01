@@ -9,7 +9,7 @@
     <!-- Buffer size sliders for each layer -->
     <div class="slider-container">
       <div class="slider" v-for="(buffer, index) in buffers" :key="index">
-        <input type="range" min="0" max="500" v-model="buffer.size" @input="updateBuffer(buffer)" />
+        <input type="range" min="0" max="200" v-model="buffer.size" @input="updateBuffer(buffer)" />
         <p>{{ buffer.label }}: {{ buffer.size }} m</p>
       </div>
     </div>
@@ -44,11 +44,18 @@ export default {
       }
 
       if (buffer.size > 0) {
-        const resized = turf.union(turf.featureCollection(
-          layers[buffer.layer].features.map(
-            (feature) => turf.buffer(feature, buffer.size, { units: 'meters' }))
-        ));
-        buffer.layerBuffer = L.geoJSON(resized, { style: { color: buffer.color } }).addTo(map.value);
+        const features = layers[buffer.layer].features.map(
+          (feature) => turf.buffer(feature, buffer.size, { units: 'meters' })
+        );
+
+        if (features.length >= 2) {
+          // Union only if there are 2 or more geometries
+          const resized = turf.union(turf.featureCollection(features));
+          buffer.layerBuffer = L.geoJSON(resized, { style: { color: buffer.color } }).addTo(map.value);
+        } else if (features.length === 1) {
+          // No need for union, just use the buffered feature
+          buffer.layerBuffer = L.geoJSON(features[0], { style: { color: buffer.color } }).addTo(map.value);
+        }
       }
     };
 
@@ -60,7 +67,7 @@ export default {
       const overlapStyles = {
         OpenAIP: L.tileLayer(`https://a.api.tiles.openaip.net/api/data/openaip/{z}/{x}/{y}.png?apiKey=${config.openaipApiKey}`, { minZoom: 1, maxZoom: 19, attribution: 'Map data &copy; <a href="https://www.openaip.net/">OpenAIP</a>', crossOrigin: true, }),
       };
-      map.value = L.map(baseMap.value, { center: props.center, zoom: props.zoom, layers: [tileStyles.Satellite], });
+      map.value = L.map(baseMap.value, { center: props.center, zoom: props.zoom, layers: [tileStyles.Satellite], zoomAnimation: false });
       map.value.addControl(new L.Control.Fullscreen());
       map.value.addControl(new L.Control.Layers(tileStyles, overlapStyles));
 
