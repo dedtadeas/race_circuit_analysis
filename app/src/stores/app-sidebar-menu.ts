@@ -14,7 +14,7 @@ export const useAppSidebarMenuStore = defineStore({
 		}
 			,
 		{
-			'url': '/Circuits',
+			'url': '/circuits',
 			'icon': 'bi bi-map',
 			'text': 'Circuits'
 		}

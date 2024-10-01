@@ -3,7 +3,7 @@
   <div>
     <ul class="breadcrumb">
       <li class="breadcrumb-item"><router-link to="/">&gt;&gt;</router-link></li>
-      <li class="breadcrumb-item"><router-link to="/Circuits">Circuits</router-link></li>
+      <li class="breadcrumb-item"><router-link to="/circuits">Circuits</router-link></li>
       <li class="breadcrumb-item active">{{ circuitName }}</li>
     </ul>
     <h1>{{ circuitName }}</h1>
@@ -20,6 +20,14 @@
     />
     <div class="reference-section mt-4">
       <h2>References</h2>
+      <div v-if="circuitDetails.links && circuitDetails.links.length > 0">
+      <h3>Links</h3>
+      <ul>
+        <li v-for="link in circuitDetails.links" :key="link.url">
+          <a :href="link.url" target="_blank">{{ link.title }}</a>
+        </li>
+      </ul>
+    </div>
       <CircuitGallery :images="circuitImages" />
       <CircuitVideo :videos="circuitVideos" />
     </div>
@@ -36,6 +44,9 @@ const circuits = [
 {id: '1',
   name: 'RedBull Ring',
   info: 'RedBull Ring in Austria is a fast track with a lot of elevation changes.',
+  links: [
+    { title: 'Official website', url: 'https://www.projekt-spielberg.com/en' },
+  ],
   coordinates: [47.2197, 14.7646],
   zoom: 14,
   layers: [
@@ -57,6 +68,9 @@ const circuits = [
 {id: '2',
   name: 'Circuit de Spa-Francorchamps',
   info: 'Circuit de Spa-Francorchamps in Belgium is known for its high-speed corners and unpredictable weather.',
+    links: [
+    { title: 'Official website', url: 'https://www.spa-francorchamps.be/' },
+  ],
   coordinates: [50.4372, 5.9715],
   zoom: 14,
   layers: [
@@ -75,7 +89,8 @@ const circuits = [
     `${basePath}/assets/c_data/2/images/6.jpg`,
     `${basePath}/assets/c_data/2/images/7.jpg`,
     `${basePath}/assets/c_data/2/images/8.jpg`,
-    `${basePath}/assets/c_data/2/images/9.jpg`
+    `${basePath}/assets/c_data/2/images/9.jpg`,
+    `${basePath}/assets/c_data/2/images/10.jpg`
   ],
   // videos: [
   //   { title: 'Spa-Francorchamps Highlights', url: 'https://www.youtube.com/watch?v=-4FPIL6e4SQ', views: '2M', time: '3 days ago', thumbnail: '/assets/img/thumbnails/spa-video-1.jpg' },
@@ -85,6 +100,9 @@ const circuits = [
 {id: '5',
   name: 'Sachsenring',
   info: 'Sachsenring in Germany is a technical track with a lot of elevation changes.',
+    links: [
+    { title: 'Official website', url: 'https://www.sachsenring-circuit.com/' },
+  ],
   coordinates: [50.7916, 12.6868],
   zoom: 14,
   layers: [
@@ -116,6 +134,9 @@ const circuits = [
 {id: '6',
   name: 'Nürburgring',
   info: 'Nürburgring in Germany is a technical track with a lot of elevation changes.',
+  links: [
+    { title: 'Official website', url: 'https://www.nuerburgring.de/en?srsltid=AfmBOorwsXHoM22SlFEUrJ6_Y6nxecyy4gS9WRfDcf_76eoc6zSjZ2KO' },
+  ],
   coordinates: [50.3356, 6.9475],
   zoom: 14,
   layers: [

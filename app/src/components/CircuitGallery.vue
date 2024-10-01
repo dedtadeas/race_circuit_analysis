@@ -7,7 +7,7 @@
           <div class="col-xl-8">
 
               <div class="list-group list-group-flush">
-                <a href="#" class="list-group-item list-group-item-action d-flex align-items-center text-inverse">
+                <!-- <a href="#" class="list-group-item list-group-item-action d-flex align-items-center text-inverse"> -->
                   <div class="flex-fill pe-3">
                     <div class="fw-bold">Library ({{ images.length }})</div>
                     <div class="small text-inverse text-opacity-50">{{ images.length }} Images Found</div>
@@ -15,7 +15,7 @@
                   <!-- <div>
                     <i class="fa fa-chevron-right fa-lg text-inverse text-opacity-50"></i>
                   </div> -->
-                </a>
+                <!-- </a> -->
               </div>
               <hr class="m-0">
               <card-body>

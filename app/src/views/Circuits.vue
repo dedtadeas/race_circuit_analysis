@@ -16,7 +16,7 @@
         <ul>
           <!-- Loop through circuits within each country -->
           <li v-for="circuit in circuits" :key="circuit.id">
-            <router-link :to="`/Circuits/${circuit.id}`">{{ circuit.name }}</router-link>
+            <router-link :to="`/circuits/${circuit.id}`">{{ circuit.name }}</router-link>
           </li>
         </ul>
       </li>
