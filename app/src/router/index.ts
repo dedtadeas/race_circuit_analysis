@@ -1,17 +1,16 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 import { useAppOptionStore } from '@/stores/app-option';
 import CircuitPage from '@/views/CircuitPage.vue';
 
+const basePath = process.env.NODE_ENV === 'production' ? '/race_circuit_analysis/' : '/';
+
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     { path: '/Home', component: () => import('../views/Home.vue') },
     { path: '/', component: () => import('../views/Circuits.vue') },
-    { path: '/Circuits', component: () => import('../views/Circuits.vue') },
-    { path: '/Circuits/:id', component: CircuitPage, props: true },
-    // { path: '/overview', component: () => import('../views/UavControlOverview.vue') },
-    // // { path: '/contact', component: () => import('../views/Contact.vue') },
-    // { path: '/:pathMatch(.*)*', component: () => import('../views/PageError.vue') }
+    { path: '/circuits', component: () => import('../views/Circuits.vue') },
+    { path: '/circuits/:id', component: CircuitPage, props: true }
   ],
 });
 
