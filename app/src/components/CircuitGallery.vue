@@ -5,16 +5,16 @@
       <card-body>
         <div class="row">
           <div class="col-xl-8">
-            <card>
+
               <div class="list-group list-group-flush">
                 <a href="#" class="list-group-item list-group-item-action d-flex align-items-center text-inverse">
                   <div class="flex-fill pe-3">
                     <div class="fw-bold">Library ({{ images.length }})</div>
                     <div class="small text-inverse text-opacity-50">{{ images.length }} Images Found</div>
                   </div>
-                  <div>
+                  <!-- <div>
                     <i class="fa fa-chevron-right fa-lg text-inverse text-opacity-50"></i>
-                  </div>
+                  </div> -->
                 </a>
               </div>
               <hr class="m-0">
@@ -27,7 +27,6 @@
                   </div>
                 </div>
               </card-body>
-            </card>
           </div>
         </div>
       </card-body>

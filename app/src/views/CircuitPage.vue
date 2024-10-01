@@ -144,6 +144,43 @@ const circuits = [
   videos: [
     { title: 'LIVE RACE 24 h', url: 'https://www.youtube.com/watch?v=84N89QJUEXY', views: '1M', time: '2 days ago', thumbnail: '/assets/img/thumbnails/redbull-video-1.jpg' },
 ]
+  },
+{id: '7',
+  name: 'Hockenheim',
+  info: '',
+  links: [
+    { title: 'Official website', url: 'https://www.hockenheimring.de/en/' },
+    { title: '3D Tour', url: 'https://files.hockenheimring.de/tour/HHR.html' },
+  ],
+  coordinates: [49.3278, 8.5656],
+  zoom: 14,
+  layers: [
+    // {'label': 'civil industrial'  , 'has_buffer': true , 'file_path': 'assets/c_data/7/geojsons/x7_Hockenheim_Civil_Industrial.geojson'},
+    // {'label': 'civil residential' , 'has_buffer': true , 'file_path': 'assets/c_data/7/geojsons/x7_Hockenheim_Civil_Residential.geojson'},
+    {'label': 'other'             , 'has_buffer': true , 'file_path': 'assets/c_data/7/geojsons/x7_Hockenheim_Other.geojson'},
+    { 'label': 'parking', 'has_buffer': true, 'file_path': 'assets/c_data/7/geojsons/x7_Hockenheim_Parking.geojson' },
+    { 'label': 'paddock', 'has_buffer': false, 'file_path': 'assets/c_data/7/geojsons/x7_Hockenheim_Paddock.geojson' },
+    {'label': 'roads'             , 'has_buffer': true , 'file_path': 'assets/c_data/7/geojsons/x7_Hockenheim_Roads.geojson'},
+    {'label': 'spectators AC'     , 'has_buffer': true , 'file_path': 'assets/c_data/7/geojsons/x7_Hockenheim_Spectators_AC.geojson'},
+    {'label': 'spectators stand'  , 'has_buffer': true , 'file_path': 'assets/c_data/7/geojsons/x7_Hockenheim_Spectators_Stand.geojson'},
+    {'label': 'spectators tribune', 'has_buffer': true , 'file_path': 'assets/c_data/7/geojsons/x7_Hockenheim_Spectators_Tribune.geojson'},
+    {'label': 'track'             , 'has_buffer': false, 'file_path': 'assets/c_data/7/geojsons/x7_Hockenheim_Track.geojson'},
+  ],
+  images: [
+    `${basePath}/assets/c_data/7/images/1.jpg`,
+    `${basePath}/assets/c_data/7/images/2.jpg`,
+    `${basePath}/assets/c_data/7/images/3.jpg`,
+    `${basePath}/assets/c_data/7/images/4.jpg`,
+    `${basePath}/assets/c_data/7/images/5.jpg`,
+    `${basePath}/assets/c_data/7/images/6.jpg`,
+    `${basePath}/assets/c_data/7/images/7.jpg`,
+    `${basePath}/assets/c_data/7/images/8.jpg`,
+    `${basePath}/assets/c_data/7/images/9.jpg`,
+    `${basePath}/assets/c_data/7/images/10.jpg`
+  ],
+//   videos: [
+//     { title: 'LIVE RACE 24 h', url: 'https://www.youtube.com/watch?v=84N89QJUEXY', views: '1M', time: '2 days ago', thumbnail: '/assets/img/thumbnails/redbull-video-1.jpg' },
+// ]
 },
 ];
 

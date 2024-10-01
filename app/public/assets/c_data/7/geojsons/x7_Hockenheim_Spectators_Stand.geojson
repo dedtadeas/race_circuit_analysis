@@ -1,0 +1,4 @@
+{
+  "type" : "FeatureCollection",
+  "features" : [{"type":"Feature","id":47,"geometry":{"type":"Polygon","coordinates":[[[8.5805628473975162,49.332017355516598],[8.5840853272760569,49.332883269547324],[8.5838552339319563,49.333040072641268],[8.5803138853775636,49.332165792217609],[8.5805628473975162,49.332017355516598]]]},"properties":{"OBJECTID":47,"name":"Stehtribune (Spitzkehre 1)","type":"stand","density":2,"description":"In construction","Shape_Length":0.0078433198771320437,"Shape_Area":7.4745275758288983e-07}}]
+}
