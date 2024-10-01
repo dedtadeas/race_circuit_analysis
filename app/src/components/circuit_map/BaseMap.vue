@@ -48,7 +48,7 @@ export default {
           layers[buffer.layer].features.map(
             (feature) => turf.buffer(feature, buffer.size, { units: 'meters' }))
         ));
-        buffer.layerBuffer = L.geoJSON(resized, { style: { color: pallete[buffer.layer] } }).addTo(map.value);
+        buffer.layerBuffer = L.geoJSON(resized, { style: { color: buffer.color } }).addTo(map.value);
       }
     };
 
@@ -70,9 +70,10 @@ export default {
       )).then((data) => {
         const tmpBuffers = [];
         for (let i = 0; i < data.length; ++i) {
-          layers.push(L.geoJSON(data[i], { style: { color: pallete[i % pallete.length] } }).addTo(map.value).toGeoJSON());
+          const color = pallete[i % pallete.length];
+          layers.push(L.geoJSON(data[i], { style: { color: color } }).addTo(map.value).toGeoJSON());
           if (props.layers[i].has_buffer)
-            tmpBuffers.push({layer: i, size: 0, ...props.layers[i]});
+            tmpBuffers.push({layer: i, size: 0, color: color, ...props.layers[i]});
         }
         buffers.value     = tmpBuffers;
         fetchStatus.value = 0;
