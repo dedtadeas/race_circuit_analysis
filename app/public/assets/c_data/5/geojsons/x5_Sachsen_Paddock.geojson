@@ -1,0 +1,4 @@
+{
+  "type" : "FeatureCollection",
+  "features" : [{"type":"Feature","id":1,"geometry":{"type":"Polygon","coordinates":[[[12.684789699584996,50.791235999841547],[12.684813799617189,50.791208100173719],[12.684876399626205,50.79115609957438],[12.685036499634805,50.790951100013331],[12.688029800435004,50.792260100123599],[12.687924399891187,50.792271999952902],[12.687311000202556,50.792341499560621],[12.684789699584996,50.791235999841547]]]},"properties":{"OBJECTID":1,"osm_id":" ","osm_way_id":"229799549","name":" ","type":" ","aeroway":" ","amenity":"parking","admin_leve":" ","barrier":" ","boundary":" ","building":" ","craft":" ","geological":" ","historic":" ","land_area":" ","landuse":" ","leisure":" ","man_made":" ","military":" ","natural":" ","office":" ","place":" ","shop":" ","sport":" ","tourism":" ","other_tags":" ","Shape_Length":0.0071217723941885622,"Shape_Area":1.0856020018067999e-06}}]
+}
