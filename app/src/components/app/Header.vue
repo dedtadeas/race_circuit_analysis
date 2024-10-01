@@ -177,7 +177,7 @@ function checkForm(event) {
 							<i class="bi bi-person-fill fs-32px mb-n3"></i>
 						</div>
 					</div>
-					<div class="menu-text d-sm-block d-none w-170px">username@account.com</div>
+					<!-- <div class="menu-text d-sm-block d-none w-170px">username@account.com</div> -->
 				</a>
 				<div class="dropdown-menu dropdown-menu-end me-lg-3 fs-11px mt-1">
 					<RouterLink to="/profile" class="dropdown-item d-flex align-items-center">PROFILE <i
