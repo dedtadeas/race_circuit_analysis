@@ -7,12 +7,11 @@ export const useAppSidebarMenuStore = defineStore({
 			'text': 'Navigation',
 			'is_header': true
 		},
-		{
-			'url': '/',
-			'icon': 'bi bi-house-door',
-			'text': 'Home'
-		}
-			,
+		// {
+		// 	'url': '/',
+		// 	'icon': 'bi bi-house-door',
+		// 	'text': 'Home'
+		// },
 		{
 			'url': '/circuits',
 			'icon': 'bi bi-map',

@@ -1,0 +1,62 @@
+Stands and spectators (differentiate colors)
+Highways/Roads (Another category)
+Access corridors (Different category)
+
+
+Circuit to be done till Wednesday 2.10.:
+Sachsenring Circuit --
+Nurburgring -- https://www.youtube.com/watch?v=84N89QJUEXY
+Hockenheim --
+Bahrain Internation Circuit and Sakhir Outer Circuit
+Losail Internation Circuit
+Jeddah Street Circuit --
+Yas Marina Circuit TBD
+
+Jeddah 
+https://jeddahcircuit.com/motorsport
+https://www.formula1.com/en/video/jeddah-street-circuit-first-look-f1s-brand-new-track-in-saudi-arabia.1715401112473745964
+
+
+
+Postup 
+Stáhnout data přes open street map. 
+Import do QGIS, import do ArcGis Pro 
+
+Export křivek okruhu (krivky)
+Export křivek silnic (křivky)
+Definice tribun (plygony)
+Definice standů (plygony)
+Definice access corridors (křivky)
+Parkoviště (polygony) Paddock (polygony)
+Ostatní (Heliport, whatever important related to drone operation)
+Civil (Residential, Industrial, Culture, Services, Funpark, )
+
+links
+
+
+
+TODO: 
+pridat cisla ke sliderum, drag no
+Paddock parking predelat pro vsechny
+Pop up windows s atributy
+
+
+
+
+
+
+Brela - Chrovatsko
+
+Jediné, kdy může odejít člen bez výpovědní lhůty, tak je to z důvodu nesouhlasu navýšení. Podstatné navýšení ceny. 
+
+Termín Petra noha -> workaway
+
+Gabriela a Tereza dát vědět.
+
+Stanovy: 
+0. Členové rady musí/nemusí být členové spolku. 
+1. Členství může být i mimo Dubínek. Např. členové, kteří nemají hlasovací práva. 
+2. Emeritní členové vs. členové s minimálním příspěvkem.
+3. 
+
+Napsat datovkou rozhodnutí o odstoupení. 

@@ -30,9 +30,9 @@ export default {
   data() {
     return {
       circuitsByCountry: {
-        Austria: [
-          { id: 1, name: "RedBull Ring" }
-        ],
+        // Austria: [
+        //   { id: 1, name: "RedBull Ring" }
+        // ],
         Belgium: [
           { id: 2, name: "Circuit de Spa-Francorchamps" }
         ],

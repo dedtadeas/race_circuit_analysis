@@ -241,15 +241,17 @@ const circuits = [
     links: [
       { title: 'Official website', url: 'https://www.circuitlosail.com/' },
     ],
-    coordinates: [25.4911, 51.3977],
+    coordinates: [25.4885, 51.4505],
     zoom: 14,
     layers: [
       { 'label': 'civil', 'has_buffer': true, 'file_path': 'assets/c_data/25/geojsons/x25_Losail_Civil.geojson' },
       { 'label': 'other', 'has_buffer': true, 'file_path': 'assets/c_data/25/geojsons/x25_Losail_Other.geojson' },
       { 'label': 'parking', 'has_buffer': true, 'file_path': 'assets/c_data/25/geojsons/x25_Losail_Parking.geojson' },
+      { 'label': 'paddock', 'has_buffer': false, 'file_path': 'assets/c_data/25/geojsons/x25_Losail_Paddock.geojson' },
       { 'label': 'roads', 'has_buffer': true, 'file_path': 'assets/c_data/25/geojsons/x25_Losail_Roads.geojson' },
       { 'label': 'spectators AC', 'has_buffer': true, 'file_path': 'assets/c_data/25/geojsons/x25_Losail_Spectators_AC.geojson' },
       { 'label': 'spectators tribune', 'has_buffer': true, 'file_path': 'assets/c_data/25/geojsons/x25_Losail_Spectators_Tribune.geojson' },
+      { 'label': 'spectators stand', 'has_buffer': false, 'file_path': 'assets/c_data/25/geojsons/x25_Losail_Spectators_Stand.geojson' },
       { 'label': 'track', 'has_buffer': false, 'file_path': 'assets/c_data/25/geojsons/x25_Losail_Track.geojson' },
     ],
     images: [
@@ -258,9 +260,9 @@ const circuits = [
       `${basePath}/assets/c_data/25/images/3.jpg`,
       `${basePath}/assets/c_data/25/images/4.jpg`,
       `${basePath}/assets/c_data/25/images/5.jpg`,
-      `${basePath}/assets/c_data/25/images/6.jpg`,
-      `${basePath}/assets/c_data/25/images/7.jpg`,
-      `${basePath}/assets/c_data/25/images/8.jpg`,
+      // `${basePath}/assets/c_data/25/images/6.jpg`,
+      // `${basePath}/assets/c_data/25/images/7.jpg`,
+      // `${basePath}/assets/c_data/25/images/8.jpg`,
     ],
     //   videos: [
     //     { title: 'LIVE RACE 24 h', url: 'https://www.youtube.com/watch?v=84N89QJUEXY', views: '1M', time: '2 days ago', thumbnail: '/assets/img/thumbnails/redbull-video-1.jpg' },
