@@ -141,7 +141,7 @@ const circuits = [
   coordinates: [50.3356, 6.9475],
   zoom: 14,
   layers: [
-    {'label': 'civil residential' , 'has_buffer': true , 'file_path': 'assets/c_data/6/geojsons/x6_Nurburgring_Civil_Residential.geojson'},
+    {'label': 'civil' , 'has_buffer': true , 'file_path': 'assets/c_data/6/geojsons/x6_Nurburgring_Civil.geojson'},
     {'label': 'other'             , 'has_buffer': true , 'file_path': 'assets/c_data/6/geojsons/x6_Nurburgring_Other.geojson'},
     { 'label': 'parking', 'has_buffer': true, 'file_path': 'assets/c_data/6/geojsons/x6_Nurburgring_Parking.geojson' },
     { 'label': 'paddock', 'has_buffer': false, 'file_path': 'assets/c_data/6/geojsons/x6_Nurburgring_Paddock.geojson' },
@@ -177,8 +177,6 @@ const circuits = [
   coordinates: [49.3278, 8.5656],
   zoom: 14,
   layers: [
-    // {'label': 'civil industrial'  , 'has_buffer': true , 'file_path': 'assets/c_data/7/geojsons/x7_Hockenheim_Civil_Industrial.geojson'},
-    // {'label': 'civil residential' , 'has_buffer': true , 'file_path': 'assets/c_data/7/geojsons/x7_Hockenheim_Civil_Residential.geojson'},
     {'label': 'other'             , 'has_buffer': true , 'file_path': 'assets/c_data/7/geojsons/x7_Hockenheim_Other.geojson'},
     { 'label': 'parking', 'has_buffer': true, 'file_path': 'assets/c_data/7/geojsons/x7_Hockenheim_Parking.geojson' },
     { 'label': 'paddock', 'has_buffer': false, 'file_path': 'assets/c_data/7/geojsons/x7_Hockenheim_Paddock.geojson' },
@@ -204,6 +202,70 @@ const circuits = [
 //     { title: 'LIVE RACE 24 h', url: 'https://www.youtube.com/watch?v=84N89QJUEXY', views: '1M', time: '2 days ago', thumbnail: '/assets/img/thumbnails/redbull-video-1.jpg' },
 // ]
   },
+  {
+    id: '24',
+    name: 'Barhain International Circuit',
+    info: '',
+    links: [
+      { title: 'Official website', url: 'https://www.bahraingp.com/' },
+    ],
+    coordinates: [26.0321, 50.5108],
+    zoom: 14,
+    layers: [
+      { 'label': 'civil', 'has_buffer': true, 'file_path': 'assets/c_data/24/geojsons/x24_Bahrain_Civil.geojson' },
+      { 'label': 'other', 'has_buffer': true, 'file_path': 'assets/c_data/24/geojsons/x24_Bahrain_Other.geojson' },
+      { 'label': 'parking', 'has_buffer': true, 'file_path': 'assets/c_data/24/geojsons/x24_Bahrain_Parking.geojson' },
+      { 'label': 'roads', 'has_buffer': true, 'file_path': 'assets/c_data/24/geojsons/x24_Bahrain_Roads.geojson' },
+      { 'label': 'spectators AC', 'has_buffer': true, 'file_path': 'assets/c_data/24/geojsons/x24_Bahrain_Spectators_AC.geojson' },
+      { 'label': 'spectators tribune', 'has_buffer': true, 'file_path': 'assets/c_data/24/geojsons/x24_Bahrain_Spectators_Tribune.geojson' },
+      { 'label': 'track', 'has_buffer': false, 'file_path': 'assets/c_data/24/geojsons/x24_Bahrain_Track.geojson' },
+    ],
+    images: [
+      `${basePath}/assets/c_data/24/images/1.jpg`,
+      `${basePath}/assets/c_data/24/images/2.jpg`,
+      `${basePath}/assets/c_data/24/images/3.jpg`,
+      `${basePath}/assets/c_data/24/images/4.jpg`,
+      `${basePath}/assets/c_data/24/images/5.jpg`,
+      `${basePath}/assets/c_data/24/images/6.jpg`,
+      `${basePath}/assets/c_data/24/images/7.jpg`,
+      `${basePath}/assets/c_data/24/images/8.jpg`,
+    ],
+    //   videos: [
+    //     { title: 'LIVE RACE 24 h', url: 'https://www.youtube.com/watch?v=84N89QJUEXY', views: '1M', time: '2 days ago', thumbnail: '/assets/img/thumbnails/redbull-video-1.jpg' },
+    // ]
+  },
+    {
+    id: '25',
+    name: 'Losail International Circuit',
+    info: '',
+    links: [
+      { title: 'Official website', url: 'https://www.circuitlosail.com/' },
+    ],
+    coordinates: [25.4911, 51.3977],
+    zoom: 14,
+    layers: [
+      { 'label': 'civil', 'has_buffer': true, 'file_path': 'assets/c_data/25/geojsons/x25_Losail_Civil.geojson' },
+      { 'label': 'other', 'has_buffer': true, 'file_path': 'assets/c_data/25/geojsons/x25_Losail_Other.geojson' },
+      { 'label': 'parking', 'has_buffer': true, 'file_path': 'assets/c_data/25/geojsons/x25_Losail_Parking.geojson' },
+      { 'label': 'roads', 'has_buffer': true, 'file_path': 'assets/c_data/25/geojsons/x25_Losail_Roads.geojson' },
+      { 'label': 'spectators AC', 'has_buffer': true, 'file_path': 'assets/c_data/25/geojsons/x25_Losail_Spectators_AC.geojson' },
+      { 'label': 'spectators tribune', 'has_buffer': true, 'file_path': 'assets/c_data/25/geojsons/x25_Losail_Spectators_Tribune.geojson' },
+      { 'label': 'track', 'has_buffer': false, 'file_path': 'assets/c_data/25/geojsons/x25_Losail_Track.geojson' },
+    ],
+    images: [
+      `${basePath}/assets/c_data/25/images/1.jpg`,
+      `${basePath}/assets/c_data/25/images/2.jpg`,
+      `${basePath}/assets/c_data/25/images/3.jpg`,
+      `${basePath}/assets/c_data/25/images/4.jpg`,
+      `${basePath}/assets/c_data/25/images/5.jpg`,
+      `${basePath}/assets/c_data/25/images/6.jpg`,
+      `${basePath}/assets/c_data/25/images/7.jpg`,
+      `${basePath}/assets/c_data/25/images/8.jpg`,
+    ],
+    //   videos: [
+    //     { title: 'LIVE RACE 24 h', url: 'https://www.youtube.com/watch?v=84N89QJUEXY', views: '1M', time: '2 days ago', thumbnail: '/assets/img/thumbnails/redbull-video-1.jpg' },
+    // ]
+  },
   {id: '26',
     name: 'Jeddah Street Circuit',
     info: '',
@@ -220,7 +282,6 @@ const circuits = [
       { 'label': 'paddock', 'has_buffer': false, 'file_path': 'assets/c_data/26/geojsons/x26_Jeddah_Paddock.geojson' },
       { 'label': 'roads', 'has_buffer': true, 'file_path': 'assets/c_data/26/geojsons/x26_Jeddah_Roads.geojson' },
       { 'label': 'spectators AC', 'has_buffer': true, 'file_path': 'assets/c_data/26/geojsons/x26_Jeddah_Spectators_AC.geojson' },
-      // { 'label': 'spectators stand', 'has_buffer': true, 'file_path': 'assets/c_data/26/geojsons/x26_Jeddah_Spectators_Stand.geojson' },
       { 'label': 'spectators tribune', 'has_buffer': true, 'file_path': 'assets/c_data/26/geojsons/x26_Jeddah_Spectators_Tribune.geojson' },
       { 'label': 'track', 'has_buffer': false, 'file_path': 'assets/c_data/26/geojsons/x26_Jeddah_Track.geojson' },
     ],
@@ -235,6 +296,41 @@ const circuits = [
       `${basePath}/assets/c_data/26/images/8.jpg`,
       `${basePath}/assets/c_data/26/images/9.jpg`,
       `${basePath}/assets/c_data/26/images/10.jpg`
+    ],
+    //   videos: [
+    //     { title: 'LIVE RACE 24 h', url: 'https://www.youtube.com/watch?v=84N89QJUEXY', views: '1M', time: '2 days ago', thumbnail: '/assets/img/thumbnails/redbull-video-1.jpg' },
+    // ]
+  },
+  {
+    id: '27',
+    name: 'Yas Marina Circuit',
+    info: '',
+    links: [
+      { title: 'Official website', url: 'https://www.yasmarinacircuit.com/' },
+    ],
+    coordinates: [24.4672, 54.6031],
+    zoom: 14,
+    layers: [
+      { 'label': 'civil', 'has_buffer': true, 'file_path': 'assets/c_data/27/geojsons/x27_Yas_Civil.geojson' },
+      { 'label': 'other', 'has_buffer': true, 'file_path': 'assets/c_data/27/geojsons/x27_Yas_Other.geojson' },
+      { 'label': 'parking', 'has_buffer': true, 'file_path': 'assets/c_data/27/geojsons/x27_Yas_Parking.geojson' },
+      { 'label': 'paddock', 'has_buffer': false, 'file_path': 'assets/c_data/27/geojsons/x27_Yas_Paddock.geojson' },
+      { 'label': 'roads', 'has_buffer': true, 'file_path': 'assets/c_data/27/geojsons/x27_Yas_Roads.geojson' },
+      { 'label': 'spectators AC', 'has_buffer': true, 'file_path': 'assets/c_data/27/geojsons/x27_Yas_Spectators_AC.geojson' },
+      { 'label': 'spectators tribune', 'has_buffer': true, 'file_path': 'assets/c_data/27/geojsons/x27_Yas_Spectators_Tribune.geojson' },
+      { 'label': 'track', 'has_buffer': false, 'file_path': 'assets/c_data/27/geojsons/x27_Yas_Track.geojson' },
+    ],
+    images: [
+      `${basePath}/assets/c_data/27/images/1.jpg`,
+      `${basePath}/assets/c_data/27/images/2.jpg`,
+      `${basePath}/assets/c_data/27/images/3.jpg`,
+      `${basePath}/assets/c_data/27/images/4.jpg`,
+      `${basePath}/assets/c_data/27/images/5.jpg`,
+      `${basePath}/assets/c_data/27/images/6.jpg`,
+      `${basePath}/assets/c_data/27/images/7.jpg`,
+      // `${basePath}/assets/c_data/27/images/8.jpg`,
+      // `${basePath}/assets/c_data/27/images/9.jpg`,
+      // `${basePath}/assets/c_data/27/images/10.jpg`
     ],
     //   videos: [
     //     { title: 'LIVE RACE 24 h', url: 'https://www.youtube.com/watch?v=84N89QJUEXY', views: '1M', time: '2 days ago', thumbnail: '/assets/img/thumbnails/redbull-video-1.jpg' },

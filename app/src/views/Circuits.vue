@@ -81,18 +81,18 @@ export default {
         // UK: [
         //   { id: 23, name: "Silverstone Circuit" }
         // ],
-        // Bahrain: [
-        //   { id: 24, name: "Bahrain International Circuit" }
-        // ],
-        // Qatar: [
-        //   { id: 25, name: "Losail International Circuit" }
-        // ],
+        Bahrain: [
+          { id: 24, name: "Bahrain International Circuit" }
+        ],
+        Qatar: [
+          { id: 25, name: "Losail International Circuit" }
+        ],
         Saudi_Arabia: [
           { id: 26, name: "Jeddah Street Circuit" }
         ],
-        // UAE: [
-        //   { id: 27, name: "Yas Marina Circuit" }
-        // ]
+        UAE: [
+          { id: 27, name: "Yas Marina Circuit" }
+        ]
       }
     };
   }
