@@ -8,24 +8,39 @@
     </div>
     <!-- Buffer size sliders for each layer -->
     <div class="slider-container">
-      <div class="slider" v-for="(buffer, index) in buffers" :key="index">
-        <strong>{{ buffer.label.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
-          }}</strong>
-
-        <div class="slider-input-container">
-          <input type="range" min="0" max="200" v-model="buffer.size" @input="updateBuffer(buffer)"
-            @mousedown="stopMapMovement" class="slider-range" />
-          <input type="number" min="0" max="200" v-model="buffer.size" @input="updateBuffer(buffer)"
-            class="ms-2 buffer-input " />
-          <span class="unit">m</span>
+      <!-- Section for Layers with Buffer Enabled -->
+      <div class="legend-section">
+        <h4>Layers with Buffer</h4>
+        <div class="slider" v-for="(buffer, index) in buffers" :key="index">
+          <strong>
+            <span class="color-box" :style="{ backgroundColor: buffer.color }"></span>
+            {{ formatLabel(buffer.label) }}
+          </strong>
+          <div class="slider-input-container">
+            <input type="range" min="0" max="200" v-model="buffer.size" @input="updateBuffer(buffer)" class="slider-range" />
+            <input type="number" min="0" max="200" v-model="buffer.size" @input="updateBuffer(buffer)" class="ms-2 buffer-input" />
+            <span class="unit">m</span>
+          </div>
         </div>
+      </div>
+
+      <!-- Section for Layers without Buffer -->
+      <div class="legend-section">
+        <h4>Layers without Buffer</h4>
+        <ul>
+          <li v-for="layer in layersWithoutBuffer" :key="layer.label">
+            <span class="color-box" :style="{ backgroundColor: getColor(layer.label) }"></span>
+            {{ formatLabel(layer.label) }}
+          </li>
+        </ul>
       </div>
     </div>
   </div>
 </template>
 
+
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-fullscreen';
@@ -42,8 +57,24 @@ export default {
     const fetchStatus = ref(1); // loading: 1, success: 0, error: 2
     const layers = [];
     const buffers = ref([]);
-    const pallete = ['#FF0000', '#00FF00', '#FFFF00', '#0000FF', '#FF00FF', '#00FFFF', '#FFFFFF'];
 
+    // Define color dictionary
+    const colorDict = {
+      track: '#FFFFFF', // white
+      parking: '#FF5733', // orange
+      paddock: '#33FF57', // green
+      roads: '#3357FF', // blue
+      'spectators AC': '#FFC300', // yellow
+      'spectators stand': '#FF33A8', // pink
+      'spectators tribune': '#DAF7A6', // light green
+      civil: '#FF5733', // orange
+      other: '#115733', // dark green,
+    };
+
+    // Function to get color for a layer
+    const getColor = (label) => colorDict[label] || '#000000'; // Fallback to black if color not found
+
+    // Update buffer size and redraw buffer on map
     const updateBuffer = (buffer) => {
       if (buffer.layerBuffer) {
         map.value.removeLayer(buffer.layerBuffer);
@@ -56,19 +87,22 @@ export default {
         );
 
         if (features.length >= 2) {
-          // Union only if there are 2 or more geometries
           const resized = turf.union(turf.featureCollection(features));
           buffer.layerBuffer = L.geoJSON(resized, { style: { color: buffer.color } }).addTo(map.value);
         } else if (features.length === 1) {
-          // No need for union, just use the buffered feature
           buffer.layerBuffer = L.geoJSON(features[0], { style: { color: buffer.color } }).addTo(map.value);
         }
       }
     };
+
     const stopMapMovement = (event) => {
-      console.log('stopMapMovement');
       event.stopPropagation();
     };
+
+    const formatLabel = (label) => {
+      return label.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    };
+
     onMounted(() => {
       const tileStyles = {
         Satellite: L.tileLayer(`https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.jpg?key=${config.mapTilerApiKey}`, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 19, crossOrigin: true }),
@@ -82,15 +116,17 @@ export default {
       map.value.addControl(new L.Control.Layers(tileStyles, overlapStyles));
 
       const basePath = process.env.NODE_ENV === 'production' ? '/race_circuit_analysis' : '';
+
       Promise.all(props.layers.map(
         (layer) => fetch(`${basePath}/${layer['file_path']}`).then(x => x.json())
       )).then((data) => {
         const tmpBuffers = [];
         for (let i = 0; i < data.length; ++i) {
-          const color = pallete[i % pallete.length];
+          const color = colorDict[props.layers[i].label] || '#000000';
           layers.push(L.geoJSON(data[i], { style: { color: color } }).addTo(map.value).toGeoJSON());
-          if (props.layers[i].has_buffer)
+          if (props.layers[i].has_buffer) {
             tmpBuffers.push({ layer: i, size: 0, color: color, ...props.layers[i] });
+          }
         }
         buffers.value = tmpBuffers;
         fetchStatus.value = 0;
@@ -100,12 +136,19 @@ export default {
       });
     });
 
+    const layersWithoutBuffer = computed(() => {
+      return props.layers.filter(layer => !layer.has_buffer);
+    });
+
     return {
       baseMap,
       buffers,
       fetchStatus,
       updateBuffer,
-      stopMapMovement, 
+      stopMapMovement,
+      formatLabel,
+      getColor,
+      layersWithoutBuffer
     };
   },
 };
@@ -168,68 +211,61 @@ export default {
 
 .slider-range {
   -webkit-appearance: none;
-  /* Override default styling */
   appearance: none;
   width: 100%;
-  /* Full width */
   height: 8px;
-  /* Height of the track */
   background: #ddd;
-  /* Track color */
   border-radius: 5px;
-  /* Round corners of the track */
   outline: none;
-  /* Remove outline */
 }
 
-/* Style the thumb */
 .slider-range::-webkit-slider-thumb {
   -webkit-appearance: none;
-  /* Override default styling */
   appearance: none;
   width: 16px;
-  /* Thumb width */
   height: 16px;
-  /* Thumb height */
   border-radius: 50%;
-  /* Round thumb */
   background: var(--bs-theme);
-  /* Thumb color */
   cursor: pointer;
-  /* Pointer cursor on hover */
 }
 
 .slider-range::-moz-range-thumb {
   width: 16px;
-  /* Thumb width */
   height: 16px;
-  /* Thumb height */
   border-radius: 50%;
-  /* Round thumb */
   background: var(--bs-theme);
-  /* Thumb color */
   cursor: pointer;
-  /* Pointer cursor on hover */
 }
-
-/* Optional: Change thumb color on hover */
-.slider-range::-webkit-slider-thumb:hover {
-  background: var(--bs-theme);
-  /* Darker green on hover */
-}
-
-.slider-range::-moz-range-thumb:hover {
-  background: var(--bs-theme);
-  /* Darker green on hover */
-}
-
 
 .unit {
   margin-left: 5px;
-  /* Space between input and unit */
 }
 
-.leaflet-control-attribution {
-  display: none;
+.legend-section {
+  margin-bottom: 15px;
+}
+
+.legend-section h4 {
+  margin-bottom: 10px;
+  color: white;
+}
+
+.legend-section ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.legend-section ul li {
+  color: white;
+  padding: 5px 0;
+}
+
+.color-box {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 8px;
+  vertical-align: middle;
+  border: 1px solid #fff;
 }
 </style>

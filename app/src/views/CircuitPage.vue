@@ -76,7 +76,8 @@ const circuits = [
   layers: [
     { 'label': 'parking', 'has_buffer': true, 'file_path': 'assets/c_data/2/geojsons/x2_Spa_Parking.geojson' },
     { 'label': 'paddock', 'has_buffer': false, 'file_path': 'assets/c_data/2/geojsons/x2_Spa_Paddock.geojson' },
-    {'label': 'roads'             , 'has_buffer': true, 'file_path': 'assets/c_data/2/geojsons/x2_Spa_Roads.geojson'},
+    { 'label': 'roads', 'has_buffer': true, 'file_path': 'assets/c_data/2/geojsons/x2_Spa_Roads.geojson' },
+    // { 'label': 'track', 'has_buffer': false, 'file_path': 'assets/c_data/2/geojsons/x2_Spa_Track.geojson' },
     {'label': 'spectators AC'     , 'has_buffer': true, 'file_path': 'assets/c_data/2/geojsons/x2_Spa_Spectators_AC.geojson'},
     {'label': 'spectators stand'  , 'has_buffer': true, 'file_path': 'assets/c_data/2/geojsons/x2_Spa_Spectators_Stand.geojson'},
     {'label': 'spectators tribune', 'has_buffer': true, 'file_path': 'assets/c_data/2/geojsons/x2_Spa_Spectators_Tribune.geojson'},
