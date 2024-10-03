@@ -252,7 +252,7 @@ const circuits = [
       { 'label': 'roads', 'has_buffer': true, 'file_path': 'assets/c_data/25/geojsons/x25_Losail_Roads.geojson' },
       { 'label': 'spectators AC', 'has_buffer': true, 'file_path': 'assets/c_data/25/geojsons/x25_Losail_Spectators_AC.geojson' },
       { 'label': 'spectators tribune', 'has_buffer': true, 'file_path': 'assets/c_data/25/geojsons/x25_Losail_Spectators_Tribune.geojson' },
-      { 'label': 'spectators stand', 'has_buffer': false, 'file_path': 'assets/c_data/25/geojsons/x25_Losail_Spectators_Stand.geojson' },
+      { 'label': 'spectators stand', 'has_buffer': true, 'file_path': 'assets/c_data/25/geojsons/x25_Losail_Spectators_Stand.geojson' },
       { 'label': 'track', 'has_buffer': false, 'file_path': 'assets/c_data/25/geojsons/x25_Losail_Track.geojson' },
     ],
     images: [

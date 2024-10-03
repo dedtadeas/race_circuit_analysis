@@ -7,16 +7,16 @@
       </p>
     </div>
     <!-- Buffer size sliders for each layer -->
-    <div class="slider-container">
+    <div class="slider-container" @mousedown="stopMapMovement">
       <!-- Section for Layers with Buffer Enabled -->
       <div class="legend-section">
-        <h4>Layers with Buffer</h4>
+        <h6>Layers with Buffer</h6>
         <div class="slider" v-for="(buffer, index) in buffers" :key="index">
           <strong>
             <span class="color-box" :style="{ backgroundColor: buffer.color }"></span>
             {{ formatLabel(buffer.label) }}
           </strong>
-          <div class="slider-input-container">
+          <div class="slider-input-container" >
             <input type="range" min="0" max="200" v-model="buffer.size" @input="updateBuffer(buffer)" @mousedown="stopMapMovement" class="slider-range" />
             <input type="number" min="0" max="200" v-model="buffer.size" @input="updateBuffer(buffer)" @mousedown="stopMapMovement" @dblclick="stopMapMovement" class="ms-2 buffer-input" />
             <span class="unit">m</span>
@@ -26,7 +26,7 @@
 
       <!-- Section for Layers without Buffer -->
       <div class="legend-section">
-        <h4>Layers without Buffer</h4>
+        <h6>Layers without Buffer</h6>
         <ul>
           <li v-for="layer in layersWithoutBuffer" :key="layer.label">
             <span class="color-box" :style="{ backgroundColor: getColor(layer.label) }"></span>
@@ -60,15 +60,15 @@ export default {
 
     // Define color dictionary
     const colorDict = {
-      track: '#FFFFFF', // white
-      parking: '#FF5733', // orange
-      paddock: '#33FF57', // green
-      roads: '#3357FF', // blue
-      'spectators AC': '#FFC300', // yellow
-      'spectators stand': '#FF33A8', // pink
-      'spectators tribune': '#DAF7A6', // light green
-      civil: '#FF5733', // orange
-      other: '#115733', // dark green,
+      track: '#fff600', 
+      parking: '#9fe7f5',
+      paddock: '#33FF57', 
+      roads: '#FFFFFF',
+      'spectators AC': '#007bff', 
+      'spectators stand': '#ffa652', 
+      'spectators tribune': '#ff7b00',
+      civil: '#3357FF',
+      other: '#6700b6',
     };
 
     // Function to get color for a layer
@@ -107,6 +107,11 @@ export default {
       const tileStyles = {
         Satellite: L.tileLayer(`https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.jpg?key=${config.mapTilerApiKey}`, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 19, crossOrigin: true }),
         OpenStreetMap: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { minZoom: 1, maxZoom: 19, attribution: 'Map data &copy; OpenStreetMap contributors' }),
+    Positron: L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', { 
+    minZoom: 1, 
+    maxZoom: 19, 
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>' 
+  }),
       };
       const overlapStyles = {
         OpenAIP: L.tileLayer(`https://a.api.tiles.openaip.net/api/data/openaip/{z}/{x}/{y}.png?apiKey=${config.openaipApiKey}`, { minZoom: 1, maxZoom: 19, attribution: 'Map data &copy; <a href="https://www.openaip.net/">OpenAIP</a>', crossOrigin: true }),
@@ -200,7 +205,7 @@ export default {
 
 .slider>strong {
   display: block;
-  margin-bottom: 5px;
+  /* margin-bottom: 5px; */
 }
 
 .slider-input-container {
