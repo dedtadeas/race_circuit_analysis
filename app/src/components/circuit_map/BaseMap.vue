@@ -111,7 +111,7 @@ export default {
       const overlapStyles = {
         OpenAIP: L.tileLayer(`https://a.api.tiles.openaip.net/api/data/openaip/{z}/{x}/{y}.png?apiKey=${config.openaipApiKey}`, { minZoom: 1, maxZoom: 19, attribution: 'Map data &copy; <a href="https://www.openaip.net/">OpenAIP</a>', crossOrigin: true }),
       };
-      map.value = L.map(baseMap.value, { center: props.center, zoom: props.zoom, layers: [tileStyles.Satellite], zoomAnimation: false });
+      map.value = L.map(baseMap.value, { center: props.center, zoom: props.zoom, layers: [tileStyles.Satellite], zoomAnimation: false,  attributionControl: false  });
       map.value.addControl(new L.Control.Fullscreen());
       map.value.addControl(new L.Control.Layers(tileStyles, overlapStyles));
 
@@ -194,9 +194,9 @@ export default {
   padding: 10px;
 }
 
-.slider {
+/* .slider {
   margin-bottom: 10px;
-}
+} */
 
 .slider>strong {
   display: block;
