@@ -104,11 +104,11 @@ export default {
       }
       }
 
-      const existingBufferIndex = layerBuffers.findIndex(lb => lb.layer === buffer.layer);
+      const existingBufferIndex = layerBuffers.findIndex(lb => lb && lb.layer === buffer.layer);
       if (existingBufferIndex !== -1) {
-      layerBuffers[existingBufferIndex] = buffer.layerBuffer;
+        layerBuffers[existingBufferIndex] = buffer.layerBuffer;
       } else {
-      layerBuffers.push(buffer.layerBuffer);
+        layerBuffers.push(buffer.layerBuffer);
       }
 
       updateFreeFlyLayer();
