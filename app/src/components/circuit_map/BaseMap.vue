@@ -54,8 +54,8 @@ export default {
   props: { center: Array, zoom: Number, layers: Array },
   setup(props) {
     const baseMap = ref(null);
-    const map = ref(null);
     const fetchStatus = ref(1); // loading: 1, success: 0, error: 2
+    let map = null; // Cannot be ref, otherwise causes crashes after switching tile layers
     const layers = [];
     const layerBuffers = [];
     const buffers = ref([]);
@@ -87,7 +87,7 @@ export default {
 
     const updateBuffer = (buffer) => {
       if (buffer.layerBuffer) { // Only non-zero buffers have extra layer
-        map.value.removeLayer(buffer.layerBuffer);
+        map.removeLayer(buffer.layerBuffer);
         buffer.layerBuffer = null; // Remove bufferlayer
       }
 
@@ -100,7 +100,7 @@ export default {
         }
 
         const newStyle = layerViewOn.value ? toggledLayerStyle : unToggledLayerStyle;
-        buffer.layerBuffer = L.geoJSON(features, { style: { color: buffer.color, ...newStyle } }).addTo(map.value);
+        buffer.layerBuffer = L.geoJSON(features, { style: { color: buffer.color, ...newStyle } }).addTo(map);
       }
 
       const existingBufferIndex = layerBuffers.findIndex(lb => lb && lb.layer === buffer.layer);
@@ -115,7 +115,7 @@ export default {
 
     const updateFreeFlyLayer = () => {
       if (freeFlyLayer) {
-        map.value.removeLayer(freeFlyLayer);
+        map.removeLayer(freeFlyLayer);
         freeFlyLayer = null;
       }
 
@@ -143,7 +143,7 @@ export default {
         const newStyle = layerViewOn.value ? freeFlyVisibleStyle : freeFlyHiddenStyle;
         freeFlyLayer = L.geoJSON(inverted, {
           style: { color: colorDict.freefly, ...newStyle },
-        }).addTo(map.value);
+        }).addTo(map);
       }
     };
 
@@ -166,9 +166,9 @@ export default {
         OpenAIP: L.tileLayer(`https://a.api.tiles.openaip.net/api/data/openaip/{z}/{x}/{y}.png?apiKey=${config.openaipApiKey}`, { minZoom: 1, maxZoom: 19, attribution: 'Map data &copy; <a href="https://www.openaip.net/">OpenAIP</a>', crossOrigin: true }),
       };
 
-      map.value = L.map(baseMap.value, { center: props.center, zoom: props.zoom, layers: [tileStyles.Satellite], zoomAnimation: false,  attributionControl: false });
-      map.value.addControl(new L.Control.Fullscreen());
-      map.value.addControl(new L.Control.Layers(tileStyles, overlapStyles));
+      map = L.map(baseMap.value, { center: props.center, zoom: props.zoom, layers: [tileStyles.Satellite], zoomAnimation: false,  attributionControl: false });
+      map.addControl(new L.Control.Fullscreen());
+      map.addControl(new L.Control.Layers(tileStyles, overlapStyles));
 
       const basePath = process.env.NODE_ENV === 'production' ? '/race_circuit_analysis' : '';
 
@@ -181,7 +181,7 @@ export default {
         for (let i = 0; i < data.length; ++i) {
           const color = colorDict[props.layers[i].label] || '#000000';
           const newStyle = layerViewOn.value ? toggledLayerStyle : unToggledLayerStyle;
-          layers.push(L.geoJSON(data[i], { style: { color: color, ...newStyle } }).addTo(map.value));
+          layers.push(L.geoJSON(data[i], { style: { color: color, ...newStyle } }).addTo(map));
           if (props.layers[i].has_buffer) {
             tmpBuffers.push({ layer: i, size: 0, color: color, ...props.layers[i] });
           }
