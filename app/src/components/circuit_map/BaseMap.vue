@@ -1,3 +1,4 @@
+<!-- vi: set et sw=2 ts=2: -->
 <template>
   <div ref="baseMap" class="base-map">
     <!-- Loading or error overlay -->
@@ -7,7 +8,7 @@
       </p>
     </div>
     <!-- Buffer size sliders for each layer -->
-    <div class="slider-container" @mousedown="stopMapMovement">
+    <div class="slider-container" @mousedown.stop>
       <!-- Section for Layers with Buffer Enabled -->
       <div class="legend-section">
         <h6>Layers with Buffer</h6>
@@ -17,8 +18,8 @@
             {{ formatLabel(buffer.label) }}
           </strong>
           <div class="slider-input-container">
-            <input type="range" min="0" max="200" v-model="buffer.size" @input="updateBuffer(buffer)" @mousedown="stopMapMovement" class="slider-range" />
-            <input type="number" min="0" max="200" v-model="buffer.size" @input="updateBuffer(buffer)" @mousedown="stopMapMovement" @dblclick="stopMapMovement" class="ms-2 buffer-input" />
+            <input type="range" min="0" max="200" v-model="buffer.size" @input="updateBuffer(buffer)" @mousedown.stop class="slider-range" />
+            <input type="number" min="0" max="200" v-model="buffer.size" @input="updateBuffer(buffer)" @mousedown.stop @dblclick.stop class="ms-2 buffer-input" />
             <span class="unit">m</span>
           </div>
         </div>
@@ -85,23 +86,21 @@ export default {
     const getColor = (label) => colorDict[label] || '#000000'; // Fallback to black if color not found
 
     const updateBuffer = (buffer) => {
-      if (buffer.layerBuffer) {
-      map.value.removeLayer(buffer.layerBuffer);
-      buffer.layerBuffer = null;
+      if (buffer.layerBuffer) { // Only non-zero buffers have extra layer
+        map.value.removeLayer(buffer.layerBuffer);
+        buffer.layerBuffer = null; // Remove bufferlayer
       }
 
-      if (buffer.size > 0) {
-      const features = layers[buffer.layer].toGeoJSON().features.map(
-        (feature) => turf.buffer(feature, buffer.size, { units: 'meters' })
-      );
+      if (buffer.size > 0) { // Fixes crash when selecting 0 sized buffer
+        let features = layers[buffer.layer].toGeoJSON().features.map(
+          (feature) => turf.buffer(feature, buffer.size, { units: 'meters' }));
 
-      const newStyle = layerViewOn.value ? toggledLayerStyle : unToggledLayerStyle;
-      if (features.length >= 2) {
-        const resized = turf.union(turf.featureCollection(features));
-        buffer.layerBuffer = L.geoJSON(resized, { style: { color: buffer.color, ...newStyle } }).addTo(map.value);
-      } else if (features.length === 1) {
-        buffer.layerBuffer = L.geoJSON(features[0], { style: { color: buffer.color, ...newStyle } }).addTo(map.value);
-      }
+        if (features.length > 1) { // Fixes crash when creating union with one polygon
+          features = turf.union(turf.featureCollection(features));
+        }
+
+        const newStyle = layerViewOn.value ? toggledLayerStyle : unToggledLayerStyle;
+        buffer.layerBuffer = L.geoJSON(features, { style: { color: buffer.color, ...newStyle } }).addTo(map.value);
       }
 
       const existingBufferIndex = layerBuffers.findIndex(lb => lb && lb.layer === buffer.layer);
@@ -150,10 +149,6 @@ export default {
 
     const formatLabel = (label) => {
       return label.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-    };
-
-    const stopMapMovement = (event) => {
-      event.stopPropagation();
     };
 
     onMounted(() => {
@@ -233,7 +228,6 @@ const toggleOpacity = () => {
       layers,
       toggleOpacity,
       updateBuffer,
-      stopMapMovement,
       formatLabel,
       getColor,
       layersWithoutBuffer: props.layers.filter(layer => !layer.has_buffer),
