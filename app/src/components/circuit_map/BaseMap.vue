@@ -62,9 +62,9 @@ export default {
 
     let freeFlyLayer = null;
     const layerViewOn = ref(false);
-    const unToggledLayerStyle = { weight: 2, opacity: 1, fillOpacity: 0.4 }; // Default style for layers
+    const unToggledLayerStyle = { weight: 2, opacity: 0.7, fillOpacity: 0.4 }; // Default style for layers
     const toggledLayerStyle = { weight: 1, opacity: 0.1, fillOpacity: 0.2 }; // Toggled style for layers
-    const freeFlyVisibleStyle = {weight: 2, opacity: 1, fillOpacity: 0.3}; // Style for the FreeFly layer
+    const freeFlyVisibleStyle = {weight: 2, opacity: 0.7, fillOpacity: 0.4}; // Style for the FreeFly layer
     const freeFlyHiddenStyle = { weight: 1, opacity: 0, fillOpacity: 0 }; // Style for the FreeFly layer
 
 
@@ -74,9 +74,9 @@ export default {
       parking: '#9fe7f5',
       paddock: '#B1FF10',
       roads: '#FFFFFF',
-      'spectators AC': '#007bff',
-      'spectators stand': '#ffa652',
-      'spectators tribune': '#ff7b00',
+      'spectators AC': '#dd6342',
+      'spectators stand': '#ffa230',
+      'spectators tribune': '#fa6f01',
       civil: '#3357FF',
       other: '#6700b6',
       freefly: '#33FF57',
