@@ -16,7 +16,7 @@
             <span class="color-box" :style="{ backgroundColor: buffer.color }"></span>
             {{ formatLabel(buffer.label) }}
           </strong>
-          <div class="slider-input-container" >
+          <div class="slider-input-container">
             <input type="range" min="0" max="200" v-model="buffer.size" @input="updateBuffer(buffer)" @mousedown="stopMapMovement" class="slider-range" />
             <input type="number" min="0" max="200" v-model="buffer.size" @input="updateBuffer(buffer)" @mousedown="stopMapMovement" @dblclick="stopMapMovement" class="ms-2 buffer-input" />
             <span class="unit">m</span>
@@ -32,12 +32,12 @@
             <span class="color-box" :style="{ backgroundColor: getColor(layer.label) }"></span>
             {{ formatLabel(layer.label) }}
           </li>
+          <button @click="toggleOpacity">Toggle Opacity/Color</button>
         </ul>
       </div>
     </div>
   </div>
 </template>
-
 
 <script>
 import { ref, onMounted, computed } from 'vue';
@@ -56,71 +56,128 @@ export default {
     const map = ref(null);
     const fetchStatus = ref(1); // loading: 1, success: 0, error: 2
     const layers = [];
+    const layerBuffers = [];
     const buffers = ref([]);
+
+    let freeFlyLayer = null;
+    const layerViewOn = ref(false);
+    const unToggledLayerStyle = { weight: 2, opacity: 1, fillOpacity: 0.4 }; // Default style for layers
+    const toggledLayerStyle = { weight: 1, opacity: 0.1, fillOpacity: 0.2 }; // Toggled style for layers
+    const freeFlyVisibleStyle = {weight: 2, opacity: 1, fillOpacity: 0.3}; // Style for the FreeFly layer
+    const freeFlyHiddenStyle = { weight: 1, opacity: 0, fillOpacity: 0 }; // Style for the FreeFly layer
+
 
     // Define color dictionary
     const colorDict = {
-      track: '#fff600', 
+      track: '#fff600',
       parking: '#9fe7f5',
-      paddock: '#33FF57', 
+      paddock: '#B1FF10',
       roads: '#FFFFFF',
-      'spectators AC': '#007bff', 
-      'spectators stand': '#ffa652', 
+      'spectators AC': '#007bff',
+      'spectators stand': '#ffa652',
       'spectators tribune': '#ff7b00',
       civil: '#3357FF',
       other: '#6700b6',
+      freefly: '#33FF57',
     };
 
     // Function to get color for a layer
     const getColor = (label) => colorDict[label] || '#000000'; // Fallback to black if color not found
 
-    // Update buffer size and redraw buffer on map
     const updateBuffer = (buffer) => {
       if (buffer.layerBuffer) {
-        map.value.removeLayer(buffer.layerBuffer);
-        buffer.layerBuffer = null;
+      map.value.removeLayer(buffer.layerBuffer);
+      buffer.layerBuffer = null;
       }
 
       if (buffer.size > 0) {
-        const features = layers[buffer.layer].features.map(
-          (feature) => turf.buffer(feature, buffer.size, { units: 'meters' })
-        );
+      const features = layers[buffer.layer].toGeoJSON().features.map(
+        (feature) => turf.buffer(feature, buffer.size, { units: 'meters' })
+      );
 
-        if (features.length >= 2) {
-          const resized = turf.union(turf.featureCollection(features));
-          buffer.layerBuffer = L.geoJSON(resized, { style: { color: buffer.color } }).addTo(map.value);
-        } else if (features.length === 1) {
-          buffer.layerBuffer = L.geoJSON(features[0], { style: { color: buffer.color } }).addTo(map.value);
-        }
+      const newStyle = layerViewOn.value ? toggledLayerStyle : unToggledLayerStyle;
+      if (features.length >= 2) {
+        const resized = turf.union(turf.featureCollection(features));
+        buffer.layerBuffer = L.geoJSON(resized, { style: { color: buffer.color, ...newStyle } }).addTo(map.value);
+      } else if (features.length === 1) {
+        buffer.layerBuffer = L.geoJSON(features[0], { style: { color: buffer.color, ...newStyle } }).addTo(map.value);
       }
+      }
+
+      const existingBufferIndex = layerBuffers.findIndex(lb => lb.layer === buffer.layer);
+      if (existingBufferIndex !== -1) {
+      layerBuffers[existingBufferIndex] = buffer.layerBuffer;
+      } else {
+      layerBuffers.push(buffer.layerBuffer);
+      }
+
+      updateFreeFlyLayer();
     };
 
-    const stopMapMovement = (event) => {
-      event.stopPropagation();
+    const updateFreeFlyLayer = () => {
+      if (freeFlyLayer) {
+        map.value.removeLayer(freeFlyLayer);
+        freeFlyLayer = null;
+      }
+
+      const unionLayers = layers.flatMap((layer, index) => {
+        const buffer = buffers.value.find((b) => b.layer === index && b.size > 0);
+        if (buffer) {
+          return layer.toGeoJSON().features.map((feature) =>
+            turf.buffer(feature, buffer.size, { units: 'meters' })
+          );
+        } else {
+          return layer.toGeoJSON().features;
+        }
+      });
+
+      const filteredUnionLayers = unionLayers.filter(
+        (feature) => feature.geometry.type === 'Polygon' || feature.geometry.type === 'MultiPolygon'
+      );
+
+      const allPolygons = turf.union(turf.featureCollection(filteredUnionLayers));
+      const fullMap = turf.bboxPolygon(turf.bbox(allPolygons));
+
+      const inverted = turf.difference(turf.featureCollection([fullMap, allPolygons]));
+
+      if (inverted) {
+        const newStyle = layerViewOn.value ? freeFlyVisibleStyle : freeFlyHiddenStyle;
+        freeFlyLayer = L.geoJSON(inverted, {
+          style: { color: colorDict.freefly, ...newStyle },
+        }).addTo(map.value);
+      }
     };
 
     const formatLabel = (label) => {
       return label.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     };
 
+    const stopMapMovement = (event) => {
+      event.stopPropagation();
+    };
+
     onMounted(() => {
       const tileStyles = {
         Satellite: L.tileLayer(`https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.jpg?key=${config.mapTilerApiKey}`, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 19, crossOrigin: true }),
         OpenStreetMap: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { minZoom: 1, maxZoom: 19, attribution: 'Map data &copy; OpenStreetMap contributors' }),
-    Positron: L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', { 
-    minZoom: 1, 
-    maxZoom: 19, 
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>' 
-  }),
+        Positron: L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', { 
+          minZoom: 1, 
+          maxZoom: 19, 
+          attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>' 
+        }),
       };
+
       const overlapStyles = {
         OpenAIP: L.tileLayer(`https://a.api.tiles.openaip.net/api/data/openaip/{z}/{x}/{y}.png?apiKey=${config.openaipApiKey}`, { minZoom: 1, maxZoom: 19, attribution: 'Map data &copy; <a href="https://www.openaip.net/">OpenAIP</a>', crossOrigin: true }),
       };
-      map.value = L.map(baseMap.value, { center: props.center, zoom: props.zoom, layers: [tileStyles.Satellite], zoomAnimation: false,  attributionControl: false  });
+
+      map.value = L.map(baseMap.value, { center: props.center, zoom: props.zoom, layers: [tileStyles.Satellite], zoomAnimation: false,  attributionControl: false });
       map.value.addControl(new L.Control.Fullscreen());
       map.value.addControl(new L.Control.Layers(tileStyles, overlapStyles));
 
       const basePath = process.env.NODE_ENV === 'production' ? '/race_circuit_analysis' : '';
+
+      console.log('Fetching data...', props.layers);
 
       Promise.all(props.layers.map(
         (layer) => fetch(`${basePath}/${layer['file_path']}`).then(x => x.json())
@@ -128,36 +185,63 @@ export default {
         const tmpBuffers = [];
         for (let i = 0; i < data.length; ++i) {
           const color = colorDict[props.layers[i].label] || '#000000';
-          layers.push(L.geoJSON(data[i], { style: { color: color } }).addTo(map.value).toGeoJSON());
+          const newStyle = layerViewOn.value ? toggledLayerStyle : unToggledLayerStyle;
+          layers.push(L.geoJSON(data[i], { style: { color: color, ...newStyle } }).addTo(map.value));
           if (props.layers[i].has_buffer) {
             tmpBuffers.push({ layer: i, size: 0, color: color, ...props.layers[i] });
           }
         }
         buffers.value = tmpBuffers;
         fetchStatus.value = 0;
+        updateFreeFlyLayer();
       }).catch((e) => {
         console.error('Error fetching data:', e);
         fetchStatus.value = 2;
       });
     });
 
-    const layersWithoutBuffer = computed(() => {
-      return props.layers.filter(layer => !layer.has_buffer);
-    });
+const toggleOpacity = () => {
+  layerViewOn.value = !layerViewOn.value;
+
+  // Iterate over each layer in the layers array
+  layers.forEach((layer, index) => {
+    // Define the new style based on the layer view state
+    const newStyle = layerViewOn.value ? toggledLayerStyle : unToggledLayerStyle;
+    const color = colorDict[props.layers[index].label] || '#000000'; // Default color if not found
+    layer.setStyle({ color: color, ...newStyle });
+  });
+
+  // Update layer buffers
+  layerBuffers.forEach((buffer) => {
+    if (buffer) {
+      const newStyle = layerViewOn.value ? toggledLayerStyle : unToggledLayerStyle;
+      buffer.setStyle({ color: buffer.options.style.color, ...newStyle });
+    }
+  });
+
+  // Update the FreeFly layer style if it exists
+  if (freeFlyLayer) {
+    const newStyle = layerViewOn.value ? freeFlyVisibleStyle : freeFlyHiddenStyle;
+    freeFlyLayer.setStyle({ color: colorDict.freefly, ...newStyle });
+  }
+};
 
     return {
       baseMap,
-      buffers,
       fetchStatus,
+      buffers,
+      layers,
+      toggleOpacity,
       updateBuffer,
       stopMapMovement,
       formatLabel,
       getColor,
-      layersWithoutBuffer
+      layersWithoutBuffer: props.layers.filter(layer => !layer.has_buffer),
     };
-  },
+  }
 };
 </script>
+
 
 <style>
 .base-map {
