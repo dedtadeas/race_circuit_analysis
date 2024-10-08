@@ -18,7 +18,7 @@
             {{ formatLabel(buffer.label) }}
           </strong>
           <div class="slider-input-container">
-            <input type="range" min="0" max="200" v-model="buffer.size" @input="updateBuffer(buffer)" @mousedown.stop class="slider-range" />
+            <input type="range" min="0" max="200" step="5" v-model="buffer.size" @input="updateBuffer(buffer)" @mousedown.stop class="slider-range" />
             <input type="number" min="0" max="200" v-model="buffer.size" @input="updateBuffer(buffer)" @mousedown.stop @dblclick.stop class="ms-2 buffer-input" />
             <span class="unit">m</span>
           </div>
