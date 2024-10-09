@@ -33,9 +33,15 @@
             <span class="color-box" :style="{ backgroundColor: getColor(layer.label) }"></span>
             {{ formatLabel(layer.label) }}
           </li>
-          <button @click="toggleOpacity">Toggle Opacity/Color</button>
+
         </ul>
       </div>
+<label class="switch">
+  <span class="switch-label">Fly Zone Off/On</span>
+
+  <input type="checkbox" v-model="isFreeFlyOn" @change="toggleOpacity">
+    <span class="slider-switch"></span>
+</label>
     </div>
   </div>
 </template>
@@ -61,7 +67,7 @@ export default {
     const buffers = ref([]);
 
     let freeFlyLayer = null;
-    const layerViewOn = ref(false);
+    const isFreeFlyOn = ref(false);
     const unToggledLayerStyle = { weight: 2, opacity: 0.7, fillOpacity: 0.4 }; // Default style for layers
     const toggledLayerStyle = { weight: 1, opacity: 0.1, fillOpacity: 0.2 }; // Toggled style for layers
     const freeFlyVisibleStyle = {weight: 2, opacity: 0.7, fillOpacity: 0.4}; // Style for the FreeFly layer
@@ -99,7 +105,7 @@ export default {
           features = turf.union(turf.featureCollection(features));
         }
 
-        const newStyle = layerViewOn.value ? toggledLayerStyle : unToggledLayerStyle;
+        const newStyle = isFreeFlyOn.value ? toggledLayerStyle : unToggledLayerStyle;
         buffer.layerBuffer = L.geoJSON(features, { style: { color: buffer.color, ...newStyle } }).addTo(map);
       }
 
@@ -140,7 +146,7 @@ export default {
       const inverted = turf.difference(turf.featureCollection([fullMap, allPolygons]));
 
       if (inverted) {
-        const newStyle = layerViewOn.value ? freeFlyVisibleStyle : freeFlyHiddenStyle;
+        const newStyle = isFreeFlyOn.value ? freeFlyVisibleStyle : freeFlyHiddenStyle;
         freeFlyLayer = L.geoJSON(inverted, {
           style: { color: colorDict.freefly, ...newStyle },
         }).addTo(map);
@@ -180,7 +186,7 @@ export default {
         const tmpBuffers = [];
         for (let i = 0; i < data.length; ++i) {
           const color = colorDict[props.layers[i].label] || '#000000';
-          const newStyle = layerViewOn.value ? toggledLayerStyle : unToggledLayerStyle;
+          const newStyle = isFreeFlyOn.value ? toggledLayerStyle : unToggledLayerStyle;
           layers.push(L.geoJSON(data[i], { style: { color: color, ...newStyle } }).addTo(map));
           if (props.layers[i].has_buffer) {
             tmpBuffers.push({ layer: i, size: 0, color: color, ...props.layers[i] });
@@ -195,32 +201,30 @@ export default {
       });
     });
 
+
 const toggleOpacity = () => {
-  layerViewOn.value = !layerViewOn.value;
+  isFreeFlyOn.value = !isFreeFlyOn.value;  // Toggling based on the switch state
+  isFreeFlyOn.value = isFreeFlyOn.value;
 
   // Iterate over each layer in the layers array
   layers.forEach((layer, index) => {
-    // Define the new style based on the layer view state
-    const newStyle = layerViewOn.value ? toggledLayerStyle : unToggledLayerStyle;
-    const color = colorDict[props.layers[index].label] || '#000000'; // Default color if not found
+    const newStyle = isFreeFlyOn.value ? toggledLayerStyle : unToggledLayerStyle;
+    const color = colorDict[props.layers[index].label] || '#000000';
     layer.setStyle({ color: color, ...newStyle });
   });
 
-  // Update layer buffers
   layerBuffers.forEach((buffer) => {
     if (buffer) {
-      const newStyle = layerViewOn.value ? toggledLayerStyle : unToggledLayerStyle;
+      const newStyle = isFreeFlyOn.value ? toggledLayerStyle : unToggledLayerStyle;
       buffer.setStyle({ color: buffer.options.style.color, ...newStyle });
     }
   });
 
-  // Update the FreeFly layer style if it exists
   if (freeFlyLayer) {
-    const newStyle = layerViewOn.value ? freeFlyVisibleStyle : freeFlyHiddenStyle;
+    const newStyle = isFreeFlyOn.value ? freeFlyVisibleStyle : freeFlyHiddenStyle;
     freeFlyLayer.setStyle({ color: colorDict.freefly, ...newStyle });
   }
 };
-
     return {
       baseMap,
       fetchStatus,
@@ -350,5 +354,46 @@ const toggleOpacity = () => {
   margin-right: 8px;
   vertical-align: middle;
   border: 1px solid #fff;
+}
+
+.switch {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Adds spacing between the switch and the label */
+}
+
+.switch input[type="checkbox"] {
+  display: none; /* Hide the default checkbox */
+}
+
+.slider-switch {
+  position: relative;
+  width: 48px;
+  height: 28px;
+  background-color: #ccc;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.slider-switch::before {
+  content: "";
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  background-color: var(--bs-theme);
+  border-radius: 50%;
+  top: 1px;
+  left: 1px;
+  transition: transform 0.3s ease;
+}
+
+input[type="checkbox"]:checked + .slider-switch::before {
+  transform: translateX(20px);
+}
+
+.switch-label {
+  font-size: 1.2rem;
+  color: white; /* Change the color as per your theme */
 }
 </style>
