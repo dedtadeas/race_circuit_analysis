@@ -49,9 +49,17 @@ const circuits = [
   ],
   coordinates: [47.2197, 14.7646],
   zoom: 14,
-  layers: [
-    {'label': 'spectators', 'has_buffer': true , 'file_path': 'assets/c_data/1/geojsons/x1_RedBullRing_Spectators.geojson'},
-    {'label': 'track'     , 'has_buffer': false, 'file_path': 'assets/c_data/1/geojsons/x1_RedBullRing_Track.geojson'},
+    layers: [
+    {'label': 'spectators AC'     , 'has_buffer': true , 'file_path': 'assets/c_data/1/geojsons/x1_RedBullRing_Spectators_AC.geojson'},
+    {'label': 'spectators stand'  , 'has_buffer': true , 'file_path': 'assets/c_data/1/geojsons/x1_RedBullRing_Spectators_Stand.geojson'},
+    {'label': 'spectators tribune', 'has_buffer': true , 'file_path': 'assets/c_data/1/geojsons/x1_RedBullRing_Spectators_Tribune.geojson'},
+    {'label': 'civil', 'has_buffer': true , 'file_path': 'assets/c_data/1/geojsons/x1_RedBullRing_Civil.geojson'},
+    {'label': 'parking', 'has_buffer': true , 'file_path': 'assets/c_data/1/geojsons/x1_RedBullRing_Parking.geojson'},
+  { 'label': 'other', 'has_buffer': true, 'file_path': 'assets/c_data/1/geojsons/x1_RedBullRing_Other.geojson' },
+      { 'label': 'paddock', 'has_buffer': false, 'file_path': 'assets/c_data/1/geojsons/x1_RedBullRing_Paddock.geojson' },
+    {'label': 'roads', 'has_buffer': true , 'file_path': 'assets/c_data/1/geojsons/x1_RedBullRing_Roads.geojson'},
+      { 'label': 'track', 'has_buffer': false, 'file_path': 'assets/c_data/1/geojsons/x1_RedBullRing_Track.geojson' },
+    
   ],
   images: [
     `${basePath}/assets/c_data/1/images/1.jpg`,

@@ -18,8 +18,10 @@
             {{ formatLabel(buffer.label) }}
           </strong>
           <div class="slider-input-container">
-            <input type="range" min="0" max="200" step="5" v-model="buffer.size" @input="updateBuffer(buffer)" @mousedown.stop class="slider-range" />
-            <input type="number" min="0" max="200" v-model="buffer.size" @input="updateBuffer(buffer)" @mousedown.stop @dblclick.stop class="ms-2 buffer-input" />
+            <input type="range" min="0" max="200" step="5" v-model="buffer.size" @input="updateBuffer(buffer)"
+              @mousedown.stop class="slider-range" />
+            <input type="number" min="0" max="200" v-model="buffer.size" @input="updateBuffer(buffer)" @mousedown.stop
+              @dblclick.stop class="ms-2 buffer-input" />
             <span class="unit">m</span>
           </div>
         </div>
@@ -36,12 +38,12 @@
 
         </ul>
       </div>
-<label class="switch">
-  <span class="switch-label">Fly Zone Off/On</span>
+      <label class="switch">
+        <span class="switch-label">Fly Zone Off/On</span>
 
-  <input type="checkbox" v-model="isFreeFlyOn" @change="toggleOpacity">
-    <span class="slider-switch"></span>
-</label>
+        <input type="checkbox" v-model="isFreeFlyOn" @change="toggleOpacity">
+        <span class="slider-switch"></span>
+      </label>
     </div>
   </div>
 </template>
@@ -58,6 +60,7 @@ import config from '@/config';
 export default {
   name: 'BaseMap',
   props: { center: Array, zoom: Number, layers: Array },
+
   setup(props) {
     const baseMap = ref(null);
     const fetchStatus = ref(1); // loading: 1, success: 0, error: 2
@@ -70,7 +73,7 @@ export default {
     const isFreeFlyOn = ref(false);
     const unToggledLayerStyle = { weight: 2, opacity: 0.7, fillOpacity: 0.4 }; // Default style for layers
     const toggledLayerStyle = { weight: 1, opacity: 0.1, fillOpacity: 0.2 }; // Toggled style for layers
-    const freeFlyVisibleStyle = {weight: 2, opacity: 0.7, fillOpacity: 0.4}; // Style for the FreeFly layer
+    const freeFlyVisibleStyle = { weight: 2, opacity: 0.7, fillOpacity: 0.4 }; // Style for the FreeFly layer
     const freeFlyHiddenStyle = { weight: 1, opacity: 0, fillOpacity: 0 }; // Style for the FreeFly layer
 
 
@@ -119,6 +122,30 @@ export default {
       updateFreeFlyLayer();
     };
 
+    const toggleOpacity = () => {
+      isFreeFlyOn.value = !isFreeFlyOn.value;  // Toggling based on the switch state
+      isFreeFlyOn.value = isFreeFlyOn.value;
+
+      // Iterate over each layer in the layers array
+      layers.forEach((layer, index) => {
+        const newStyle = isFreeFlyOn.value ? toggledLayerStyle : unToggledLayerStyle;
+        const color = colorDict[props.layers[index].label] || '#000000';
+        layer.setStyle({ color: color, ...newStyle });
+      });
+
+      layerBuffers.forEach((buffer) => {
+        if (buffer) {
+          const newStyle = isFreeFlyOn.value ? toggledLayerStyle : unToggledLayerStyle;
+          buffer.setStyle({ color: buffer.options.style.color, ...newStyle });
+        }
+      });
+
+      if (freeFlyLayer) {
+        const newStyle = isFreeFlyOn.value ? freeFlyVisibleStyle : freeFlyHiddenStyle;
+        freeFlyLayer.setStyle({ color: colorDict.freefly, ...newStyle });
+      }
+    };
+
     const updateFreeFlyLayer = () => {
       if (freeFlyLayer) {
         map.removeLayer(freeFlyLayer);
@@ -161,10 +188,10 @@ export default {
       const tileStyles = {
         Satellite: L.tileLayer(`https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.jpg?key=${config.mapTilerApiKey}`, { tileSize: 512, zoomOffset: -1, minZoom: 1, maxZoom: 19, crossOrigin: true }),
         OpenStreetMap: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { minZoom: 1, maxZoom: 19, attribution: 'Map data &copy; OpenStreetMap contributors' }),
-        Positron: L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', { 
-          minZoom: 1, 
-          maxZoom: 19, 
-          attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>' 
+        Positron: L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+          minZoom: 1,
+          maxZoom: 19,
+          attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         }),
       };
 
@@ -172,7 +199,7 @@ export default {
         OpenAIP: L.tileLayer(`https://a.api.tiles.openaip.net/api/data/openaip/{z}/{x}/{y}.png?apiKey=${config.openaipApiKey}`, { minZoom: 1, maxZoom: 19, attribution: 'Map data &copy; <a href="https://www.openaip.net/">OpenAIP</a>', crossOrigin: true }),
       };
 
-      map = L.map(baseMap.value, { center: props.center, zoom: props.zoom, layers: [tileStyles.Satellite], zoomAnimation: false,  attributionControl: false });
+      map = L.map(baseMap.value, { center: props.center, zoom: props.zoom, layers: [tileStyles.Satellite], zoomAnimation: false, attributionControl: false });
       map.addControl(new L.Control.Fullscreen());
       map.addControl(new L.Control.Layers(tileStyles, overlapStyles));
 
@@ -201,30 +228,6 @@ export default {
       });
     });
 
-
-const toggleOpacity = () => {
-  isFreeFlyOn.value = !isFreeFlyOn.value;  // Toggling based on the switch state
-  isFreeFlyOn.value = isFreeFlyOn.value;
-
-  // Iterate over each layer in the layers array
-  layers.forEach((layer, index) => {
-    const newStyle = isFreeFlyOn.value ? toggledLayerStyle : unToggledLayerStyle;
-    const color = colorDict[props.layers[index].label] || '#000000';
-    layer.setStyle({ color: color, ...newStyle });
-  });
-
-  layerBuffers.forEach((buffer) => {
-    if (buffer) {
-      const newStyle = isFreeFlyOn.value ? toggledLayerStyle : unToggledLayerStyle;
-      buffer.setStyle({ color: buffer.options.style.color, ...newStyle });
-    }
-  });
-
-  if (freeFlyLayer) {
-    const newStyle = isFreeFlyOn.value ? freeFlyVisibleStyle : freeFlyHiddenStyle;
-    freeFlyLayer.setStyle({ color: colorDict.freefly, ...newStyle });
-  }
-};
     return {
       baseMap,
       fetchStatus,
@@ -359,11 +362,13 @@ const toggleOpacity = () => {
 .switch {
   display: flex;
   align-items: center;
-  gap: 10px; /* Adds spacing between the switch and the label */
+  gap: 10px;
+  /* Adds spacing between the switch and the label */
 }
 
 .switch input[type="checkbox"] {
-  display: none; /* Hide the default checkbox */
+  display: none;
+  /* Hide the default checkbox */
 }
 
 .slider-switch {
@@ -388,12 +393,13 @@ const toggleOpacity = () => {
   transition: transform 0.3s ease;
 }
 
-input[type="checkbox"]:checked + .slider-switch::before {
+input[type="checkbox"]:checked+.slider-switch::before {
   transform: translateX(20px);
 }
 
 .switch-label {
-  font-size: 1.2rem;
-  color: white; /* Change the color as per your theme */
+  font-size: 1rem;
+  color: white;
+  /* Change the color as per your theme */
 }
 </style>
